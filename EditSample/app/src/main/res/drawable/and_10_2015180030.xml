@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android"
+    >
+    <item
+        android:height="900dp"
+        android:width="500dp"
+        >
+        <shape android:shape="rectangle">
+            <gradient
+                android:type="linear"
+                android:gradientRadius="50dp"
+                android:startColor="#CCC"
+                android:centerColor="#55A"
+                android:endColor="#000"
+                />
+        </shape>
+    </item>
+
+    <item>
+        <shape android:shape="oval">
+            <gradient
+                android:startColor="#5AB"
+                android:type="radial"
+                android:gradientRadius="100dp"
+                />
+        </shape>
+    </item>
+
+    <item
+        >
+        <shape android:shape="oval">
+            <gradient
+                android:startColor="#0AF"
+                android:type="radial"
+                android:gradientRadius="100dp"
+                />
+            <padding
+                android:top="1dp"
+                android:bottom="1dp"
+                />
+        </shape>
+    </item>
+
+    <item
+        >
+        <shape android:shape="rectangle">
+            <gradient
+                android:startColor="#F0A"
+                android:type="radial"
+                android:gradientRadius="50dp"
+                />
+
+        </shape>
+    </item>
+
+    <item>
+        <shape android:shape="oval">
+            <gradient
+                android:startColor="#AFA"
+                android:type="radial"
+                android:gradientRadius="20dp"
+                />
+        </shape>
+    </item>
+
+    <item
+        >
+        <shape android:shape="ring"
+            android:innerRadiusRatio="3"
+            android:useLevel="false"
+            >
+            <gradient
+                android:startColor="#AFF"
+                android:type="linear"
+                />
+            <stroke
+                android:color="#FFF"
+                android:dashGap="2dp"
+                android:dashWidth="2dp"
+                android:width="2dp"
+                />
+        </shape>
+    </item>
+
+</layer-list>

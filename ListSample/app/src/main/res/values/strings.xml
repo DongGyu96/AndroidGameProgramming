@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">ListSample</string>
+    <string name="add">Add</string>
+    <string name="delete">Delete</string>
+    <string name="add_highscore_message">Please enter your name for this highscore</string>
+    <string name="highscore">Highscore</string>
+    <string name="cancel">Cancel</string>
+</resources>

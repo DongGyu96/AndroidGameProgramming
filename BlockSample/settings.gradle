@@ -1,0 +1,2 @@
+rootProject.name='BlockSample'
+include ':app'

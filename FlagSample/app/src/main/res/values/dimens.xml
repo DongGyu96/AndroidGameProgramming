@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="score_item_height">100dp</dimen>
+    <dimen name="icon_width">72dp</dimen>
+    <dimen name="icon_height">72dp</dimen>
+    <dimen name="score_padding_left">10dp</dimen>
+</resources>

@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".MainActivity">
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -54,6 +53,14 @@
             android:id="@+id/b_03"
             style="@style/cardButtonStyle"
             />
+        <ImageButton
+            android:id="@+id/b_04"
+            style="@style/cardButtonStyle"
+            />
+        <ImageButton
+            android:id="@+id/b_05"
+            style="@style/cardButtonStyle"
+            />
     </LinearLayout>
 
     <LinearLayout
@@ -76,6 +83,14 @@
             />
         <ImageButton
             android:id="@+id/b_13"
+            style="@style/cardButtonStyle"
+            />
+        <ImageButton
+            android:id="@+id/b_14"
+            style="@style/cardButtonStyle"
+            />
+        <ImageButton
+            android:id="@+id/b_15"
             style="@style/cardButtonStyle"
             />
     </LinearLayout>
@@ -102,6 +117,14 @@
             android:id="@+id/b_23"
             style="@style/cardButtonStyle"
             />
+        <ImageButton
+            android:id="@+id/b_24"
+            style="@style/cardButtonStyle"
+            />
+        <ImageButton
+            android:id="@+id/b_25"
+            style="@style/cardButtonStyle"
+            />
     </LinearLayout>
 
     <LinearLayout
@@ -124,6 +147,14 @@
             />
         <ImageButton
             android:id="@+id/b_33"
+            style="@style/cardButtonStyle"
+            />
+        <ImageButton
+            android:id="@+id/b_34"
+            style="@style/cardButtonStyle"
+            />
+        <ImageButton
+            android:id="@+id/b_35"
             style="@style/cardButtonStyle"
             />
     </LinearLayout>

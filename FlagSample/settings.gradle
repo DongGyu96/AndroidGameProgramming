@@ -1,0 +1,2 @@
+rootProject.name='FlagSample'
+include ':app'
