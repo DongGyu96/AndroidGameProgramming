@@ -44,6 +44,11 @@ public class FrameAnimationBitmap {
         dstRect.bottom = y + halfHeight;
         draw(canvas, dstRect, null);
     }
+
+    public void draw(Canvas canvas, Rect srcRect, RectF dstRect, Paint paint) {
+        canvas.drawBitmap(sbmp.getBitmap(), srcRect, dstRect, paint);
+    }
+
     public void draw(Canvas canvas, RectF rect, Paint paint) {
         int index = timer.getIndex();
         srcRect.left = frameWidth * index;

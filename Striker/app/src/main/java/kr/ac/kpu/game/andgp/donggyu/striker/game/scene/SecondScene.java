@@ -16,6 +16,7 @@ import kr.ac.kpu.game.andgp.donggyu.striker.framework.obj.ScoreObject;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.obj.bg.ImageScrollBackground;
 //import kr.ac.kpu.game.andgp.donggyu.striker.game.map.TextMap;
 import kr.ac.kpu.game.andgp.donggyu.striker.game.obj.CityBackground;
+import kr.ac.kpu.game.andgp.donggyu.striker.game.obj.F117;
 
 public class SecondScene extends GameScene {
     private static final String TAG = SecondScene.class.getSimpleName();
@@ -82,6 +83,8 @@ public class SecondScene extends GameScene {
 //        gameWorld.add(Layer.bg.ordinal(), new ImageScrollBackground(R.mipmap.cookie_run_bg_1_2, ImageScrollBackground.Orientation.horizontal, -200));
 //        gameWorld.add(Layer.bg.ordinal(), new ImageScrollBackground(R.mipmap.cookie_run_bg_1_3, ImageScrollBackground.Orientation.horizontal, -300));
         gameWorld.add(Layer.bg.ordinal(), new CityBackground());
+
+        gameWorld.add(Layer.player.ordinal(), new F117(cx, sh - mdpi_100, 0, 0));
 
         RectF rbox = new RectF(UIBridge.x(-52), UIBridge.y(20), UIBridge.x(-20), UIBridge.y(62));
         scoreObject = new ScoreObject(R.mipmap.number_64x84, rbox);
