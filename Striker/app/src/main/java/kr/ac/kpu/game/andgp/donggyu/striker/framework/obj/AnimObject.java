@@ -11,7 +11,7 @@ public class AnimObject extends GameObject {
     private static final String TAG = AnimObject.class.getSimpleName();
     protected FrameAnimationBitmap fab;
     protected final RectF dstRect;
-    protected final int width, height;
+    protected int width, height;
 
     public AnimObject(float x, float y, int width, int height, int resId, int fps, int count) {
         fab = new FrameAnimationBitmap(resId, fps, count);

@@ -17,6 +17,9 @@ import kr.ac.kpu.game.andgp.donggyu.striker.framework.obj.bg.ImageScrollBackgrou
 //import kr.ac.kpu.game.andgp.donggyu.striker.game.map.TextMap;
 import kr.ac.kpu.game.andgp.donggyu.striker.game.obj.CityBackground;
 import kr.ac.kpu.game.andgp.donggyu.striker.game.obj.F117;
+import kr.ac.kpu.game.andgp.donggyu.striker.game.obj.Helicopter;
+import kr.ac.kpu.game.andgp.donggyu.striker.game.obj.MediumPlane;
+import kr.ac.kpu.game.andgp.donggyu.striker.game.obj.SmallPlane;
 
 public class SecondScene extends GameScene {
     private static final String TAG = SecondScene.class.getSimpleName();
@@ -27,7 +30,7 @@ public class SecondScene extends GameScene {
     private ScoreObject scoreObject;
 
     public enum Layer {
-        bg, item, enemy, player, ui, COUNT
+        bg, item, enemy, bullet, player, ui, COUNT
     }
 
 //    private GameTimer timer;
@@ -84,11 +87,15 @@ public class SecondScene extends GameScene {
 //        gameWorld.add(Layer.bg.ordinal(), new ImageScrollBackground(R.mipmap.cookie_run_bg_1_3, ImageScrollBackground.Orientation.horizontal, -300));
         gameWorld.add(Layer.bg.ordinal(), new CityBackground());
 
-        gameWorld.add(Layer.player.ordinal(), new F117(cx, sh - mdpi_100, 0, 0));
+        gameWorld.add(Layer.player.ordinal(), new F117(cx, sh - mdpi_100, 400.0f, 0));
 
         RectF rbox = new RectF(UIBridge.x(-52), UIBridge.y(20), UIBridge.x(-20), UIBridge.y(62));
         scoreObject = new ScoreObject(R.mipmap.number_64x84, rbox);
         gameWorld.add(SecondScene.Layer.ui.ordinal(), scoreObject);
+
+        gameWorld.add(Layer.enemy.ordinal(), Helicopter.get(cx, -100.f, 0.0f, 300.f));
+        gameWorld.add(Layer.enemy.ordinal(), MediumPlane.get(cx - 350.f, -100.f, 0.0f, 250.f));
+        gameWorld.add(Layer.enemy.ordinal(), SmallPlane.get(cx + 350.f, -100.f, 0.0f, 350.f));
 
     }
 

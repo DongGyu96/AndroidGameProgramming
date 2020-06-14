@@ -11,6 +11,7 @@ import kr.ac.kpu.game.andgp.donggyu.striker.framework.main.GameTimer;
 public class FrameAnimationBitmap {
 
     private static final String TAG = FrameAnimationBitmap.class.getSimpleName();
+    private boolean reverse;
     private SharedBitmap sbmp;
     private int frameWidth;
     private int frames;
@@ -33,6 +34,7 @@ public class FrameAnimationBitmap {
         this.timer = new GameTimer(frames, framesPerSecond);
         srcRect.top = 0;
         srcRect.bottom = sbmp.getHeight();
+        this.reverse = false;
     }
 
     public void draw(Canvas canvas, float x, float y) {
@@ -50,11 +52,21 @@ public class FrameAnimationBitmap {
     }
 
     public void draw(Canvas canvas, RectF rect, Paint paint) {
-        int index = timer.getIndex();
-        srcRect.left = frameWidth * index;
-        srcRect.right = srcRect.left + frameWidth;
+        if(reverse) {
+            int index = timer.getIndex();
+            index = frames - index;
+            srcRect.left = frameWidth * index;
+            srcRect.right = srcRect.left + frameWidth;
 
-        canvas.drawBitmap(sbmp.getBitmap(), srcRect, rect, paint);
+            canvas.drawBitmap(sbmp.getBitmap(), srcRect, rect, paint);
+        }
+        else {
+            int index = timer.getIndex();
+            srcRect.left = frameWidth * index;
+            srcRect.right = srcRect.left + frameWidth;
+
+            canvas.drawBitmap(sbmp.getBitmap(), srcRect, rect, paint);
+        }
     }
     public void setBitmapResource(int resId) {
         sbmp = SharedBitmap.load(resId);
@@ -78,6 +90,8 @@ public class FrameAnimationBitmap {
     public int getHeight() {
         return sbmp.getHeight();
     }
+
+    public void SetReverse(boolean reverse) {this.reverse = reverse;}
 
     public void draw(Canvas canvas, float x, float y, int radius) {
         dstRect.left = x - radius;
