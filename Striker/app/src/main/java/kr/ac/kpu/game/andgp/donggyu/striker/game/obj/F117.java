@@ -2,19 +2,29 @@ package kr.ac.kpu.game.andgp.donggyu.striker.game.obj;
 
 import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.view.MotionEvent;
 
+import java.util.ArrayList;
+
 import kr.ac.kpu.game.andgp.donggyu.striker.R;
+import kr.ac.kpu.game.andgp.donggyu.striker.framework.iface.BoxCollidable;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.iface.Touchable;
+import kr.ac.kpu.game.andgp.donggyu.striker.framework.main.GameObject;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.main.GameTimer;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.main.UIBridge;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.obj.AnimObject;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.res.bitmap.FrameAnimationBitmap;
+import kr.ac.kpu.game.andgp.donggyu.striker.framework.util.CollisionHelper;
 import kr.ac.kpu.game.andgp.donggyu.striker.game.scene.SecondScene;
 
-public class F117 extends AnimObject implements Touchable {
+public class F117 extends AnimObject implements Touchable, BoxCollidable {
     private static final int MAX_POWER = 4;
     private static final float ATTACK_COOL_TIME = 0.20f;
+    private static final float INVINCIBLE_TIME = 1.f;
+    private boolean invincible;
+    private float invincibleTime;
+    private int invincibleCount;
     private float attackCoolTime;
     private State state;
     private final int power;
@@ -59,6 +69,19 @@ public class F117 extends AnimObject implements Touchable {
         return true;
     }
 
+    @Override
+    public void getBox(RectF rect) {
+        int width = UIBridge.x(fab.getWidth()) / 2;
+        int height = UIBridge.y(fab.getHeight()) / 2;
+
+        int hw = width / 2;
+        int hh = height / 2;
+        rect.left = x - hw;
+        rect.top = y - hh;
+        rect.right = x + hw;
+        rect.bottom = y + hh;
+    }
+
     private enum State {
         idle, left, right, skill, boost
     }
@@ -79,12 +102,22 @@ public class F117 extends AnimObject implements Touchable {
         this.dy = dy;
         this.state = State.idle;
         this.power = 1;
+        this.hp = 5;
         this.attackCoolTime = ATTACK_COOL_TIME;
+        this.invincible = false;
+        this.invincibleTime = INVINCIBLE_TIME;
+        this.invincibleCount = 0;
     }
 
     @Override
     public void update() {
         float seconds = GameTimer.getTimeDiffSeconds();
+        if(invincible) {
+            invincibleTime -= seconds;
+            if(invincibleTime < 0.f) {
+                invincible = false;
+            }
+        }
         if(state == State.right) {
             if(x < UIBridge.metrics.size.x) {
                 x += dx * seconds;
@@ -98,13 +131,78 @@ public class F117 extends AnimObject implements Touchable {
 
         attackCoolTime -= seconds;
         if(attackCoolTime < 0.f) {
-            SecondScene.get().getGameWorld().add(SecondScene.Layer.bullet.ordinal(), Bullet.get(x, y, 92, 164, BULLET_IMAGE[power - 1], 0.f, -800.f));
+            SecondScene.get().getGameWorld().add(SecondScene.Layer.bullet.ordinal(), Bullet.get(x, y, 92, 164, BULLET_IMAGE[power - 1], 0.f, -800.f, true));
             attackCoolTime = ATTACK_COOL_TIME;
         }
+
+        if(!invincible) {
+            checkBulletCollision();
+            checkEnemyCollision();
+        }
+    }
+
+    private void checkEnemyCollision() {
+        ArrayList<GameObject> Enemys = SecondScene.get().getGameWorld().objectsAtLayer(SecondScene.Layer.enemy.ordinal());
+        for (GameObject obj : Enemys) {
+            if (obj instanceof Helicopter) {
+                Helicopter enemy = (Helicopter) obj;
+                if (CollisionHelper.collides(this, enemy)) {
+                    enemy.remove();
+                    Damage();
+                }
+            }
+            else if (obj instanceof SmallPlane) {
+                SmallPlane enemy = (SmallPlane) obj;
+                if (CollisionHelper.collides(this, enemy)) {
+                    enemy.remove();
+                    Damage();
+                }
+            }
+            else if (obj instanceof MediumPlane) {
+                MediumPlane enemy = (MediumPlane) obj;
+                if (CollisionHelper.collides(this, enemy)) {
+                    enemy.remove();
+                    Damage();
+                }
+            }
+            else {
+                continue;
+            }
+        }
+    }
+
+    private void checkBulletCollision() {
+        ArrayList<GameObject> bullets = SecondScene.get().getGameWorld().objectsAtLayer(SecondScene.Layer.enemy_bullet.ordinal());
+        for (GameObject obj : bullets) {
+            if (!(obj instanceof Bullet)) {
+                continue;
+            }
+            Bullet bullet = (Bullet) obj;
+            if (CollisionHelper.collides(this, bullet)) {
+                bullet.remove();
+                Damage();
+            }
+        }
+    }
+
+    private void Damage() {
+        if(invincible) {
+            return;
+        }
+        invincible = true;
+        invincibleTime = INVINCIBLE_TIME;
+        invincibleCount = 0;
     }
 
     @Override
     public void draw(Canvas canvas) {
+        if(invincible) {
+            invincibleCount++;
+            if (invincibleCount % 2 == 0) {
+                return;
+            }
+        }
+
         if(state == State.idle)
         {
             float halfWidth = width / 2;

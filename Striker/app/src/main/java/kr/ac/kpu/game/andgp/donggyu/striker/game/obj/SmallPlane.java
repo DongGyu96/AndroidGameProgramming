@@ -14,6 +14,8 @@ import kr.ac.kpu.game.andgp.donggyu.striker.framework.res.bitmap.SharedBitmap;
 import kr.ac.kpu.game.andgp.donggyu.striker.game.scene.SecondScene;
 
 public class SmallPlane extends BitmapObject implements Recyclable, BoxCollidable {
+    private static final float MAX_ATTACK_COOLTIME = 0.5f;
+    private float attackCoolTime;
     protected float dx, dy;
     protected SmallPlane(float x, float y, float dx, float dy) {
         super(x, y, 132, 108, R.mipmap.enemy1);
@@ -39,7 +41,15 @@ public class SmallPlane extends BitmapObject implements Recyclable, BoxCollidabl
 
     @Override
     public void getBox(RectF rect) {
+        int width = UIBridge.x(sbmp.getWidth()) / 2;
+        int height = UIBridge.y(sbmp.getHeight()) / 2;
 
+        int hw = width / 2;
+        int hh = height / 2;
+        rect.left = x - hw;
+        rect.top = y - hh;
+        rect.right = x + hw;
+        rect.bottom = y + hh;
     }
 
     @Override
@@ -52,6 +62,15 @@ public class SmallPlane extends BitmapObject implements Recyclable, BoxCollidabl
         float seconds = GameTimer.getTimeDiffSeconds();
         x += dx * seconds;
         y += dy * seconds;
+
+        if(y > 0.f) {
+            attackCoolTime -= seconds;
+            if(attackCoolTime < 0.f) {
+                SecondScene.get().getGameWorld().add(SecondScene.Layer.enemy_bullet.ordinal(), Bullet.get(x, y, 30, 30, R.mipmap.enemy_bullet, 0.f, 500.f, false));
+                attackCoolTime = MAX_ATTACK_COOLTIME;
+            }
+        }
+
         if(x < -50.f || x > UIBridge.metrics.size.x + 50.f || y > UIBridge.metrics.size.y) {
             SecondScene.get().getGameWorld().removeObject(this);
         }

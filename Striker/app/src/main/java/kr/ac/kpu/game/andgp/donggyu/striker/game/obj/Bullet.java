@@ -16,27 +16,31 @@ import kr.ac.kpu.game.andgp.donggyu.striker.framework.res.bitmap.FrameAnimationB
 import kr.ac.kpu.game.andgp.donggyu.striker.game.scene.SecondScene;
 
 public class Bullet extends AnimObject implements Recyclable, BoxCollidable {
+    private boolean animated;
     protected float dx, dy;
-    protected Bullet(float x, float y, int width, int height, int resId, float dx, float dy) {
+    protected Bullet(float x, float y, int width, int height, int resId, float dx, float dy, boolean animated) {
         super(x, y, width, height, resId, 60, 0);
         this.dx = dx;
         this.dy = dy;
-        fab.reset();
+        this.animated = animated;
     }
 
-    public static Bullet get(float x, float y, int width, int height, int resId, float dx, float dy) {
+    public static Bullet get(float x, float y, int width, int height, int resId, float dx, float dy, boolean animated) {
         RecyclePool rpool = GameScene.getTop().getGameWorld().getRecyclePool();
 
         Bullet bullet = (Bullet) rpool.get(Bullet.class);
         if (bullet == null) {
-            bullet = new Bullet(x, y, width, height, resId, dx, dy);
+            bullet = new Bullet(x, y, width, height, resId, dx, dy, animated);
         } else {
             bullet.x = x;
             bullet.y = y;
             bullet.width = width;
             bullet.height = height;
             bullet.fab.setBitmapResource(resId);
+            bullet.dx = dx;
+            bullet.dy = dy;
             bullet.fab.reset();
+            bullet.animated = animated;
         }
         return bullet;
     }
@@ -50,6 +54,7 @@ public class Bullet extends AnimObject implements Recyclable, BoxCollidable {
     public void update() {
         float seconds = GameTimer.getTimeDiffSeconds();
         y += dy * seconds;
+        x += dx * seconds;
         if(y < 0 || y > UIBridge.metrics.size.y) {
             SecondScene.get().getGameWorld().removeObject(this);
         }
@@ -57,30 +62,40 @@ public class Bullet extends AnimObject implements Recyclable, BoxCollidable {
 
     @Override
     public void getBox(RectF rect) {
+        int width = UIBridge.x(fab.getWidth()) / 2;
+        int height = UIBridge.y(fab.getHeight()) / 2;
 
+        int hw = width / 2;
+        int hh = height / 2;
+        rect.left = x - hw;
+        rect.top = y - hh;
+        rect.right = x + hw;
+        rect.bottom = y + hh;
     }
 
     @Override
     public void draw(Canvas canvas) {
-        if(fab.done())
-        {
-            float halfWidth = width / 2;
-            float halfHeight = height / 2;
-            dstRect.left = x - halfWidth;
-            dstRect.top = y - halfHeight;
-            dstRect.right = x + halfWidth;
-            dstRect.bottom = y + halfHeight;
+        if(animated) {
+            if (fab.done()) {
+                float halfWidth = width / 2;
+                float halfHeight = height / 2;
+                dstRect.left = x - halfWidth;
+                dstRect.top = y - halfHeight;
+                dstRect.right = x + halfWidth;
+                dstRect.bottom = y + halfHeight;
 
-            Rect srcRect = new Rect();
-            srcRect.top = 0;
-            srcRect.bottom = 41;
-            srcRect.left = 23 * 3;
-            srcRect.right = srcRect.left + 23;
+                Rect srcRect = new Rect();
+                srcRect.top = 0;
+                srcRect.bottom = 41;
+                srcRect.left = 23 * 3;
+                srcRect.right = srcRect.left + 23;
 
-            fab.draw(canvas, srcRect, dstRect, null);
+                fab.draw(canvas, srcRect, dstRect, null);
+            } else {
+                super.draw(canvas);
+            }
         }
-        else {
+        else
             super.draw(canvas);
-        }
     }
 }

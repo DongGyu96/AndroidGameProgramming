@@ -6,6 +6,7 @@ import kr.ac.kpu.game.andgp.donggyu.striker.framework.iface.Touchable;
 
 public class GameObject {
     protected float x, y;
+    protected int hp = 1;
 
     public float getX() {
         return x;

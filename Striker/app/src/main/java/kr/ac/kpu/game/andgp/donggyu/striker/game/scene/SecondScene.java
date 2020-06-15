@@ -30,7 +30,7 @@ public class SecondScene extends GameScene {
     private ScoreObject scoreObject;
 
     public enum Layer {
-        bg, item, enemy, bullet, player, ui, COUNT
+        bg, item, enemy, enemy_bullet, bullet, player, ui, COUNT
     }
 
 //    private GameTimer timer;
