@@ -17,20 +17,23 @@ import kr.ac.kpu.game.andgp.donggyu.striker.game.scene.SecondScene;
 
 public class Bullet extends AnimObject implements Recyclable, BoxCollidable {
     private boolean animated;
+    private int power;
     protected float dx, dy;
-    protected Bullet(float x, float y, int width, int height, int resId, float dx, float dy, boolean animated) {
+    protected Bullet(float x, float y, int width, int height, int resId, float dx, float dy, boolean animated, int power) {
         super(x, y, width, height, resId, 60, 0);
         this.dx = dx;
         this.dy = dy;
+        this.power = power;
         this.animated = animated;
+        this.fab.reset();
     }
 
-    public static Bullet get(float x, float y, int width, int height, int resId, float dx, float dy, boolean animated) {
+    public static Bullet get(float x, float y, int width, int height, int resId, float dx, float dy, boolean animated, int power) {
         RecyclePool rpool = GameScene.getTop().getGameWorld().getRecyclePool();
 
         Bullet bullet = (Bullet) rpool.get(Bullet.class);
         if (bullet == null) {
-            bullet = new Bullet(x, y, width, height, resId, dx, dy, animated);
+            bullet = new Bullet(x, y, width, height, resId, dx, dy, animated, power);
         } else {
             bullet.x = x;
             bullet.y = y;
@@ -39,6 +42,7 @@ public class Bullet extends AnimObject implements Recyclable, BoxCollidable {
             bullet.fab.setBitmapResource(resId);
             bullet.dx = dx;
             bullet.dy = dy;
+            bullet.power = power;
             bullet.fab.reset();
             bullet.animated = animated;
         }
@@ -98,4 +102,6 @@ public class Bullet extends AnimObject implements Recyclable, BoxCollidable {
         else
             super.draw(canvas);
     }
+
+    public int getPower() {return power;}
 }

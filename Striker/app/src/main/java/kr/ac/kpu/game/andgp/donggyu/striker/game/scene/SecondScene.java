@@ -15,6 +15,7 @@ import kr.ac.kpu.game.andgp.donggyu.striker.framework.main.UIBridge;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.obj.ScoreObject;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.obj.bg.ImageScrollBackground;
 //import kr.ac.kpu.game.andgp.donggyu.striker.game.map.TextMap;
+import kr.ac.kpu.game.andgp.donggyu.striker.game.map.TextMap;
 import kr.ac.kpu.game.andgp.donggyu.striker.game.obj.CityBackground;
 import kr.ac.kpu.game.andgp.donggyu.striker.game.obj.F117;
 import kr.ac.kpu.game.andgp.donggyu.striker.game.obj.Helicopter;
@@ -23,14 +24,14 @@ import kr.ac.kpu.game.andgp.donggyu.striker.game.obj.SmallPlane;
 
 public class SecondScene extends GameScene {
     private static final String TAG = SecondScene.class.getSimpleName();
-    //private TextMap map;
+    private TextMap map;
     private int mdpi_100;
 
     private RectF rect = new RectF();
     private ScoreObject scoreObject;
 
     public enum Layer {
-        bg, item, enemy, enemy_bullet, bullet, player, ui, COUNT
+        bg, item, boss, enemy, enemy_bullet, bullet, player, ui, COUNT
     }
 
 //    private GameTimer timer;
@@ -48,7 +49,7 @@ public class SecondScene extends GameScene {
 //            pop();
 //        }
         float dx = -2 * mdpi_100 * GameTimer.getTimeDiffSeconds();
-//        map.update(dx);
+        map.update(dx);
 //        for (int layer = Layer.platform.ordinal(); layer <= Layer.obstacle.ordinal(); layer++) {
 //            ArrayList<GameObject> objects = gameWorld.objectsAtLayer(layer);
 //            for (GameObject obj : objects) {
@@ -57,12 +58,16 @@ public class SecondScene extends GameScene {
 //        }
     }
 
+    public void pause(boolean pause) {
+        map.setPause(pause);
+    }
+
     @Override
     public void enter() {
         super.enter();
 //        GyroSensor.get();
         initObjects();
-//        map = new TextMap("stage_01.txt", gameWorld);
+        map = new TextMap("stage_01.txt", gameWorld);
     }
 
     @Override
@@ -93,9 +98,9 @@ public class SecondScene extends GameScene {
         scoreObject = new ScoreObject(R.mipmap.number_64x84, rbox);
         gameWorld.add(SecondScene.Layer.ui.ordinal(), scoreObject);
 
-        gameWorld.add(Layer.enemy.ordinal(), Helicopter.get(cx, -100.f, 0.0f, 300.f));
-        gameWorld.add(Layer.enemy.ordinal(), MediumPlane.get(cx - 350.f, -100.f, 0.0f, 250.f));
-        gameWorld.add(Layer.enemy.ordinal(), SmallPlane.get(cx + 350.f, -100.f, 0.0f, 350.f));
+//        gameWorld.add(Layer.enemy.ordinal(), Helicopter.get(cx, -100.f, 0.0f, 300.f));
+//        gameWorld.add(Layer.enemy.ordinal(), MediumPlane.get(cx - 350.f, -100.f, 0.0f, 250.f));
+//        gameWorld.add(Layer.enemy.ordinal(), SmallPlane.get(cx + 350.f, -100.f, 0.0f, 350.f));
 
     }
 

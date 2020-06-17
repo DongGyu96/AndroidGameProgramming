@@ -74,8 +74,8 @@ public class F117 extends AnimObject implements Touchable, BoxCollidable {
         int width = UIBridge.x(fab.getWidth()) / 2;
         int height = UIBridge.y(fab.getHeight()) / 2;
 
-        int hw = width / 2;
-        int hh = height / 2;
+        int hw = width / 4;
+        int hh = height / 4;
         rect.left = x - hw;
         rect.top = y - hh;
         rect.right = x + hw;
@@ -131,7 +131,7 @@ public class F117 extends AnimObject implements Touchable, BoxCollidable {
 
         attackCoolTime -= seconds;
         if(attackCoolTime < 0.f) {
-            SecondScene.get().getGameWorld().add(SecondScene.Layer.bullet.ordinal(), Bullet.get(x, y, 92, 164, BULLET_IMAGE[power - 1], 0.f, -800.f, true));
+            SecondScene.get().getGameWorld().add(SecondScene.Layer.bullet.ordinal(), Bullet.get(x, y, 92, 164, BULLET_IMAGE[power - 1], 0.f, -1000.f, true, power));
             attackCoolTime = ATTACK_COOL_TIME;
         }
 
@@ -147,21 +147,21 @@ public class F117 extends AnimObject implements Touchable, BoxCollidable {
             if (obj instanceof Helicopter) {
                 Helicopter enemy = (Helicopter) obj;
                 if (CollisionHelper.collides(this, enemy)) {
-                    enemy.remove();
+                    enemy.Damage(5);
                     Damage();
                 }
             }
             else if (obj instanceof SmallPlane) {
                 SmallPlane enemy = (SmallPlane) obj;
                 if (CollisionHelper.collides(this, enemy)) {
-                    enemy.remove();
+                    enemy.Damage(5);
                     Damage();
                 }
             }
             else if (obj instanceof MediumPlane) {
                 MediumPlane enemy = (MediumPlane) obj;
                 if (CollisionHelper.collides(this, enemy)) {
-                    enemy.remove();
+                    enemy.Damage(5);
                     Damage();
                 }
             }
