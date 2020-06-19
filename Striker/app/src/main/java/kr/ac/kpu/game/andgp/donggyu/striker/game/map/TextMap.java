@@ -141,4 +141,13 @@ public class TextMap {
 
     public void setPause(boolean pause) {this.pause = pause;}
     public boolean getPause() {return this.pause;}
+
+    public void reset() {
+        mapIndex = 0;
+
+        currentX = 0;
+        while (currentX <= createAtX) {
+            createColumn();
+        }
+    }
 }

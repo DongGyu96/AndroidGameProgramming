@@ -24,12 +24,7 @@ public class FrameAnimationBitmap {
     public FrameAnimationBitmap(int resId, int framesPerSecond, int frameCount) {
         this.sbmp = SharedBitmap.load(resId);
         this.fps = framesPerSecond;
-        if (frameCount == 0) {
-            this.frameWidth = sbmp.getHeight();
-            frameCount = sbmp.getWidth() / this.frameWidth;
-        } else {
-            this.frameWidth = sbmp.getWidth() / frameCount;
-        }
+        this.frameWidth = sbmp.getWidth() / frameCount;
         this.frames = frameCount;
         this.timer = new GameTimer(frames, framesPerSecond);
         srcRect.top = 0;
@@ -51,6 +46,14 @@ public class FrameAnimationBitmap {
         canvas.drawBitmap(sbmp.getBitmap(), srcRect, dstRect, paint);
     }
 
+    public void setFrames(int frameCount) {
+        this.frameWidth = sbmp.getWidth() / frameCount;
+        this.frames = frameCount;
+        srcRect.top = 0;
+        srcRect.bottom = sbmp.getHeight();
+        reset();
+    }
+
     public void draw(Canvas canvas, RectF rect, Paint paint) {
         if(reverse) {
             int index = timer.getIndex();
@@ -61,11 +64,19 @@ public class FrameAnimationBitmap {
             canvas.drawBitmap(sbmp.getBitmap(), srcRect, rect, paint);
         }
         else {
-            int index = timer.getIndex();
-            srcRect.left = frameWidth * index;
-            srcRect.right = srcRect.left + frameWidth;
+            if(frames == 1) {
+                srcRect.left = 0;
+                srcRect.right = srcRect.left + frameWidth;
 
-            canvas.drawBitmap(sbmp.getBitmap(), srcRect, rect, paint);
+                canvas.drawBitmap(sbmp.getBitmap(), srcRect, rect, paint);
+            }
+            else {
+                int index = timer.getIndex();
+                srcRect.left = frameWidth * index;
+                srcRect.right = srcRect.left + frameWidth;
+
+                canvas.drawBitmap(sbmp.getBitmap(), srcRect, rect, paint);
+            }
         }
     }
     public void setBitmapResource(int resId) {

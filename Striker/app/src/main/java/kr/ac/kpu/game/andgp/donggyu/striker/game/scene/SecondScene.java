@@ -15,6 +15,8 @@ import kr.ac.kpu.game.andgp.donggyu.striker.framework.main.UIBridge;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.obj.ScoreObject;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.obj.bg.ImageScrollBackground;
 //import kr.ac.kpu.game.andgp.donggyu.striker.game.map.TextMap;
+import kr.ac.kpu.game.andgp.donggyu.striker.framework.obj.ui.Button;
+import kr.ac.kpu.game.andgp.donggyu.striker.framework.obj.ui.TextButton;
 import kr.ac.kpu.game.andgp.donggyu.striker.game.map.TextMap;
 import kr.ac.kpu.game.andgp.donggyu.striker.game.obj.CityBackground;
 import kr.ac.kpu.game.andgp.donggyu.striker.game.obj.F117;
@@ -30,6 +32,10 @@ public class SecondScene extends GameScene {
     private RectF rect = new RectF();
     private ScoreObject scoreObject;
 
+    private static SecondScene instance;
+
+    private int playerType;
+
     public enum Layer {
         bg, item, boss, enemy, enemy_bullet, bullet, player, ui, COUNT
     }
@@ -44,18 +50,8 @@ public class SecondScene extends GameScene {
     @Override
     public void update() {
         super.update();
-//        Log.d(TAG, "Score: " + timer.getRawIndex());
-//        if (timer.done()) {
-//            pop();
-//        }
         float dx = -2 * mdpi_100 * GameTimer.getTimeDiffSeconds();
         map.update(dx);
-//        for (int layer = Layer.platform.ordinal(); layer <= Layer.obstacle.ordinal(); layer++) {
-//            ArrayList<GameObject> objects = gameWorld.objectsAtLayer(layer);
-//            for (GameObject obj : objects) {
-//                obj.move(dx, 0);
-//            }
-//        }
     }
 
     public void pause(boolean pause) {
@@ -65,6 +61,7 @@ public class SecondScene extends GameScene {
     @Override
     public void enter() {
         super.enter();
+        instance = this;
 //        GyroSensor.get();
         initObjects();
         map = new TextMap("stage_01.txt", gameWorld);
@@ -85,23 +82,30 @@ public class SecondScene extends GameScene {
         int sh = UIBridge.metrics.size.y;
         int cx = UIBridge.metrics.center.x;
         int cy = UIBridge.metrics.center.y;
-//        cookie = new Cookie(mdpi_100, mdpi_100);
-//        gameWorld.add(Layer.player.ordinal(), cookie);
+
 //        gameWorld.add(Layer.bg.ordinal(), new ImageScrollBackground(R.mipmap.cookie_run_bg_1, ImageScrollBackground.Orientation.horizontal, -100));
 //        gameWorld.add(Layer.bg.ordinal(), new ImageScrollBackground(R.mipmap.cookie_run_bg_1_2, ImageScrollBackground.Orientation.horizontal, -200));
 //        gameWorld.add(Layer.bg.ordinal(), new ImageScrollBackground(R.mipmap.cookie_run_bg_1_3, ImageScrollBackground.Orientation.horizontal, -300));
         gameWorld.add(Layer.bg.ordinal(), new CityBackground());
 
-        gameWorld.add(Layer.player.ordinal(), new F117(cx, sh - mdpi_100, 400.0f, 0));
+        if(playerType == 0) {
+            gameWorld.add(Layer.player.ordinal(), new F117(cx, sh - mdpi_100, 400.0f, 0));
+        }
 
         RectF rbox = new RectF(UIBridge.x(-52), UIBridge.y(20), UIBridge.x(-20), UIBridge.y(62));
         scoreObject = new ScoreObject(R.mipmap.number_64x84, rbox);
         gameWorld.add(SecondScene.Layer.ui.ordinal(), scoreObject);
 
-//        gameWorld.add(Layer.enemy.ordinal(), Helicopter.get(cx, -100.f, 0.0f, 300.f));
-//        gameWorld.add(Layer.enemy.ordinal(), MediumPlane.get(cx - 350.f, -100.f, 0.0f, 250.f));
-//        gameWorld.add(Layer.enemy.ordinal(), SmallPlane.get(cx + 350.f, -100.f, 0.0f, 350.f));
-
+        Button btnSettings = new Button(UIBridge.metrics.size.x - UIBridge.x(30), UIBridge.y(30), R.mipmap.btn_settings, R.mipmap.blue_round_btn, R.mipmap.red_round_btn);
+        btnSettings.setOnClickRunnable(new Runnable() {
+            @Override
+            public void run() {
+                DialogScene scene = new DialogScene();
+                scene.push();
+                return;
+            }
+        });
+        gameWorld.add(SecondScene.Layer.ui.ordinal(), btnSettings);
     }
 
     public void addScore(int amount) {
@@ -109,6 +113,14 @@ public class SecondScene extends GameScene {
     }
 
     public static SecondScene get() {
-        return (SecondScene) GameScene.getTop();
+        return instance;
+    }
+
+    public void restart() {
+        scoreObject.reset();
+        for (int layer = Layer.item.ordinal(); layer <= Layer.bullet.ordinal(); layer++) {
+            gameWorld.removeAllObjectsAt(layer);
+        }
+        map.reset();
     }
 }

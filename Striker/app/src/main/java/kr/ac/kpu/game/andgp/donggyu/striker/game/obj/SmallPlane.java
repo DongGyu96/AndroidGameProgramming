@@ -39,7 +39,7 @@ public class SmallPlane extends BitmapObject implements Recyclable, BoxCollidabl
             enemy.y = y;
             enemy.width = 132;
             enemy.height = 108;
-            enemy.hp = 2;
+            enemy.hp = 1;
             enemy.sbmp = SharedBitmap.load(R.mipmap.enemy1);
         }
         return enemy;
@@ -73,7 +73,7 @@ public class SmallPlane extends BitmapObject implements Recyclable, BoxCollidabl
             attackCoolTime -= seconds;
             if(attackCoolTime < 0.f) {
                 SecondScene.get().getGameWorld().add(SecondScene.Layer.enemy_bullet.ordinal(),
-                        Bullet.get(x, y, 30, 30, R.mipmap.enemy_bullet, 0.f, 500.f, false, 1));
+                        Bullet.get(x, y, 30, 30, R.mipmap.enemy_bullet, 0.f, 500.f, false, 1, 1));
                 attackCoolTime = MAX_ATTACK_COOLTIME;
             }
         }

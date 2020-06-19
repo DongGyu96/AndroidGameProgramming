@@ -22,8 +22,8 @@ public class Boss_Bomber extends AnimObject implements Recyclable, BoxCollidable
     private static final float MAX_ATTACK_COOLTIME = 1.2f;
     private float attackCoolTime;
     protected float dx, dy;
-    private Boss_Bomber_Left leftWing;
-    private Boss_Bomber_Right rightWing;
+    private Boss_Bomber_Wing leftWing;
+    private Boss_Bomber_Wing rightWing;
 
     protected Boss_Bomber(float x, float y, float dx, float dy) {
         super(x, y, 204 * 4, 110 * 4, R.mipmap.boss1, 60, 7);
@@ -56,10 +56,10 @@ public class Boss_Bomber extends AnimObject implements Recyclable, BoxCollidable
     }
 
     private void AddLeftRightWing() {
-        leftWing = new Boss_Bomber_Left(x - UIBridge.x(110), y + UIBridge.y(30), dx, dy);
+        leftWing = new Boss_Bomber_Wing(x - UIBridge.x(110), y + UIBridge.y(30), dx, dy, R.mipmap.boss1_left);
         SecondScene.get().getGameWorld().add(SecondScene.Layer.enemy.ordinal(), leftWing);
 
-        rightWing = new Boss_Bomber_Right(x + UIBridge.x(110), y + UIBridge.y(30), dx, dy);
+        rightWing = new Boss_Bomber_Wing(x + UIBridge.x(115), y + UIBridge.y(30), dx, dy, R.mipmap.boss1_right);
         SecondScene.get().getGameWorld().add(SecondScene.Layer.enemy.ordinal(), rightWing);
     }
 
@@ -68,7 +68,7 @@ public class Boss_Bomber extends AnimObject implements Recyclable, BoxCollidable
         int width = UIBridge.x(fab.getWidth()) / 2;
         int height = UIBridge.y(fab.getHeight()) / 2;
 
-        int hw = width / 2;
+        int hw = width;
         int hh = height / 2;
         rect.left = x - hw;
         rect.top = y - hh;
@@ -108,7 +108,7 @@ public class Boss_Bomber extends AnimObject implements Recyclable, BoxCollidable
                     yDir = yDir / temp;
 
                     SecondScene.get().getGameWorld().add(SecondScene.Layer.enemy_bullet.ordinal(),
-                            Bullet.get(x, y, 30, 30, R.mipmap.enemy_bullet, xDir * 400.f, yDir * 400.f, false, 1));
+                            Bullet.get(x, y, 30, 30, R.mipmap.enemy_bullet, xDir * 400.f, yDir * 400.f, false, 1, 1));
                 }
                 attackCoolTime = MAX_ATTACK_COOLTIME;
             }

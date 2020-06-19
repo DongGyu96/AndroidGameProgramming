@@ -20,8 +20,9 @@ import kr.ac.kpu.game.andgp.donggyu.striker.game.scene.SecondScene;
 
 public class F117 extends AnimObject implements Touchable, BoxCollidable {
     private static final int MAX_POWER = 4;
-    private static final float ATTACK_COOL_TIME = 0.20f;
+    private static final float ATTACK_COOL_TIME = 0.15f;
     private static final float INVINCIBLE_TIME = 1.f;
+    private final FrameAnimationBitmap fabSkill;
     private boolean invincible;
     private float invincibleTime;
     private int invincibleCount;
@@ -34,6 +35,9 @@ public class F117 extends AnimObject implements Touchable, BoxCollidable {
 
     @Override
     public boolean onTouchEvent(MotionEvent e) {
+        if(state == State.skill || state == State.boost) {
+            return false;
+        }
         int action = e.getAction();
         if(action == MotionEvent.ACTION_DOWN) {
             int cx = UIBridge.metrics.center.x;
@@ -97,10 +101,11 @@ public class F117 extends AnimObject implements Touchable, BoxCollidable {
         super(x, y, 124, 192, R.mipmap.f117, 10, 7);
         this.fabRight = new FrameAnimationBitmap(R.mipmap.f117_right, 10, 3);
         this.fabLeft = new FrameAnimationBitmap(R.mipmap.f117_left, 10, 3);
+        this.fabSkill = new FrameAnimationBitmap(R.mipmap.skill_f117, 15, 47);
         this.fabLeft.SetReverse(true);
         this.dx = dx;
         this.dy = dy;
-        this.state = State.idle;
+        this.state = State.skill;
         this.power = 1;
         this.hp = 5;
         this.attackCoolTime = ATTACK_COOL_TIME;
@@ -112,32 +117,40 @@ public class F117 extends AnimObject implements Touchable, BoxCollidable {
     @Override
     public void update() {
         float seconds = GameTimer.getTimeDiffSeconds();
-        if(invincible) {
-            invincibleTime -= seconds;
-            if(invincibleTime < 0.f) {
-                invincible = false;
-            }
-        }
-        if(state == State.right) {
-            if(x < UIBridge.metrics.size.x) {
-                x += dx * seconds;
-            }
-        }
-        else if(state == State.left) {
-            if(x > 0) {
-                x -= dx * seconds;
-            }
+
+        if(state == State.skill)
+        {
+            if(fabSkill.done())
+                state = State.idle;
         }
 
-        attackCoolTime -= seconds;
-        if(attackCoolTime < 0.f) {
-            SecondScene.get().getGameWorld().add(SecondScene.Layer.bullet.ordinal(), Bullet.get(x, y, 92, 164, BULLET_IMAGE[power - 1], 0.f, -1000.f, true, power));
-            attackCoolTime = ATTACK_COOL_TIME;
-        }
+        if(state != State.skill && state != State.boost) {
+            if(invincible) {
+                invincibleTime -= seconds;
+                if(invincibleTime < 0.f) {
+                    invincible = false;
+                }
+            }
+            if(state == State.right) {
+                if(x < UIBridge.metrics.size.x) {
+                    x += dx * seconds;
+                }
+            }
+            else if(state == State.left) {
+                if(x > 0) {
+                    x -= dx * seconds;
+                }
+            }
 
-        if(!invincible) {
-            checkBulletCollision();
-            checkEnemyCollision();
+            attackCoolTime -= seconds;
+            if (attackCoolTime < 0.f) {
+                SecondScene.get().getGameWorld().add(SecondScene.Layer.bullet.ordinal(), Bullet.get(x, y, 92, 164, BULLET_IMAGE[power - 1], 0.f, -1000.f, true, power, 4));
+                attackCoolTime = ATTACK_COOL_TIME;
+            }
+            if(!invincible) {
+                checkBulletCollision();
+                checkEnemyCollision();
+            }
         }
     }
 
@@ -201,6 +214,16 @@ public class F117 extends AnimObject implements Touchable, BoxCollidable {
             if (invincibleCount % 2 == 0) {
                 return;
             }
+        }
+        if(state == State.skill) {
+            float halfWidth = width * 2;
+            float halfHeight = height * 2;
+            dstRect.left = x - halfWidth;
+            dstRect.top = y - halfHeight;
+            dstRect.right = x + halfWidth;
+            dstRect.bottom = y + halfHeight;
+            fabSkill.draw(canvas, dstRect, null);
+            return;
         }
 
         if(state == State.idle)

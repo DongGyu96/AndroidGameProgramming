@@ -23,7 +23,7 @@ import kr.ac.kpu.game.andgp.donggyu.striker.game.scene.SecondScene;
 
 public class Explosion extends AnimObject implements Recyclable {
     public Explosion(float x, float y, int width, int height) {
-        super(x, y, width, height, R.mipmap.explosion, 60, 12);
+        super(x, y, width, height, R.mipmap.explosion, 30, 12);
         this.hp = 1;
     }
     public static Explosion get(float x, float y, int width, int height) {

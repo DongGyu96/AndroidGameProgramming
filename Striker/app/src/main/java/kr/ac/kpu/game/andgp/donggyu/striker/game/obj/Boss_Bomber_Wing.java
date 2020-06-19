@@ -18,12 +18,12 @@ import kr.ac.kpu.game.andgp.donggyu.striker.framework.obj.AnimObject;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.util.CollisionHelper;
 import kr.ac.kpu.game.andgp.donggyu.striker.game.scene.SecondScene;
 
-public class Boss_Bomber_Left extends AnimObject implements Recyclable, BoxCollidable {
+public class Boss_Bomber_Wing extends AnimObject implements Recyclable, BoxCollidable {
     private static final float MAX_ATTACK_COOLTIME = 1.2f;
     private float attackCoolTime;
     protected float dx, dy;
-    protected Boss_Bomber_Left(float x, float y, float dx, float dy) {
-        super(x, y, 55 * 4, 55 * 4, R.mipmap.boss1_left, 60, 8);
+    protected Boss_Bomber_Wing(float x, float y, float dx, float dy, int resId) {
+        super(x, y, 55 * 4, 55 * 4, resId, 60, 8);
         this.dx = dx;
         this.dy = dy;
         this.attackCoolTime = MAX_ATTACK_COOLTIME;
@@ -31,12 +31,12 @@ public class Boss_Bomber_Left extends AnimObject implements Recyclable, BoxColli
         fab.reset();
     }
 
-    public static Boss_Bomber_Left get(float x, float y, float dx, float dy) {
+    public static Boss_Bomber_Wing get(float x, float y, float dx, float dy, int resId) {
         RecyclePool rpool = GameScene.getTop().getGameWorld().getRecyclePool();
 
-        Boss_Bomber_Left enemy = (Boss_Bomber_Left) rpool.get(Boss_Bomber_Left.class);
+        Boss_Bomber_Wing enemy = (Boss_Bomber_Wing) rpool.get(Boss_Bomber_Wing.class);
         if (enemy == null) {
-            enemy = new Boss_Bomber_Left(x, y, dx, dy);
+            enemy = new Boss_Bomber_Wing(x, y, dx, dy, resId);
         } else {
             enemy.x = x;
             enemy.y = y;
@@ -44,7 +44,7 @@ public class Boss_Bomber_Left extends AnimObject implements Recyclable, BoxColli
             enemy.height = 55 * 4;
             enemy.hp = 40;
             enemy.attackCoolTime = MAX_ATTACK_COOLTIME;
-            enemy.fab.setBitmapResource(R.mipmap.boss1_left);
+            enemy.fab.setBitmapResource(resId);
             enemy.fab.reset();
         }
         return enemy;
@@ -95,7 +95,7 @@ public class Boss_Bomber_Left extends AnimObject implements Recyclable, BoxColli
                     yDir = yDir / temp;
 
                     SecondScene.get().getGameWorld().add(SecondScene.Layer.enemy_bullet.ordinal(),
-                            Bullet.get(x, y, 30, 30, R.mipmap.enemy_bullet, xDir * 400.f, yDir * 400.f, false, 1));
+                            Bullet.get(x, y, 30, 30, R.mipmap.enemy_bullet, xDir * 400.f, yDir * 400.f, false, 1, 1));
                 }
                 attackCoolTime = MAX_ATTACK_COOLTIME;
             }

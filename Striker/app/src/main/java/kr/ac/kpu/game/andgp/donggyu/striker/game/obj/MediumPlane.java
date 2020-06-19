@@ -40,7 +40,7 @@ public class MediumPlane extends BitmapObject implements Recyclable, BoxCollidab
             enemy.y = y;
             enemy.width = 172;
             enemy.height = 164;
-            enemy.hp = 5;
+            enemy.hp = 4;
             enemy.attackCoolTime = MAX_ATTACK_COOLTIME;
             enemy.sbmp = SharedBitmap.load(R.mipmap.enemy3);
         }
@@ -75,11 +75,11 @@ public class MediumPlane extends BitmapObject implements Recyclable, BoxCollidab
             attackCoolTime -= seconds;
             if(attackCoolTime < 0.f) {
                 SecondScene.get().getGameWorld().add(SecondScene.Layer.enemy_bullet.ordinal(),
-                        Bullet.get(x, y, 30, 30, R.mipmap.enemy_bullet, 0.f, 500.f, false, 1));
+                        Bullet.get(x, y, 30, 30, R.mipmap.enemy_bullet, 0.f, 500.f, false, 1, 1));
                 SecondScene.get().getGameWorld().add(SecondScene.Layer.enemy_bullet.ordinal(),
-                        Bullet.get(x, y, 30, 30, R.mipmap.enemy_bullet, 75.f, 500.f, false, 1));
+                        Bullet.get(x, y, 30, 30, R.mipmap.enemy_bullet, 75.f, 500.f, false, 1, 1));
                 SecondScene.get().getGameWorld().add(SecondScene.Layer.enemy_bullet.ordinal(),
-                        Bullet.get(x, y, 30, 30, R.mipmap.enemy_bullet, -75.f, 500.f, false, 1));
+                        Bullet.get(x, y, 30, 30, R.mipmap.enemy_bullet, -75.f, 500.f, false, 1, 1));
                 attackCoolTime = MAX_ATTACK_COOLTIME;
             }
         }

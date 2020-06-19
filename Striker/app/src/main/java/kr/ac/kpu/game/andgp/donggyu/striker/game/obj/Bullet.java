@@ -19,8 +19,8 @@ public class Bullet extends AnimObject implements Recyclable, BoxCollidable {
     private boolean animated;
     private int power;
     protected float dx, dy;
-    protected Bullet(float x, float y, int width, int height, int resId, float dx, float dy, boolean animated, int power) {
-        super(x, y, width, height, resId, 60, 0);
+    protected Bullet(float x, float y, int width, int height, int resId, float dx, float dy, boolean animated, int power, int count) {
+        super(x, y, width, height, resId, 10, count);
         this.dx = dx;
         this.dy = dy;
         this.power = power;
@@ -28,18 +28,19 @@ public class Bullet extends AnimObject implements Recyclable, BoxCollidable {
         this.fab.reset();
     }
 
-    public static Bullet get(float x, float y, int width, int height, int resId, float dx, float dy, boolean animated, int power) {
+    public static Bullet get(float x, float y, int width, int height, int resId, float dx, float dy, boolean animated, int power, int count) {
         RecyclePool rpool = GameScene.getTop().getGameWorld().getRecyclePool();
 
         Bullet bullet = (Bullet) rpool.get(Bullet.class);
         if (bullet == null) {
-            bullet = new Bullet(x, y, width, height, resId, dx, dy, animated, power);
+            bullet = new Bullet(x, y, width, height, resId, dx, dy, animated, power, count);
         } else {
             bullet.x = x;
             bullet.y = y;
             bullet.width = width;
             bullet.height = height;
             bullet.fab.setBitmapResource(resId);
+            bullet.fab.setFrames(count);
             bullet.dx = dx;
             bullet.dy = dy;
             bullet.power = power;

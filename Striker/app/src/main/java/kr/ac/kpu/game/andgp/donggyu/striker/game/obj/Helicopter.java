@@ -88,7 +88,7 @@ public class Helicopter extends AnimObject implements Recyclable, BoxCollidable 
                     yDir = yDir / temp;
 
                     SecondScene.get().getGameWorld().add(SecondScene.Layer.enemy_bullet.ordinal(),
-                            Bullet.get(x, y, 30, 30, R.mipmap.enemy_bullet, xDir * 400.f, yDir * 400.f, false, 1));
+                            Bullet.get(x, y, 30, 30, R.mipmap.enemy_bullet, xDir * 400.f, yDir * 400.f, false, 1, 1));
                 }
                 attackCoolTime = MAX_ATTACK_COOLTIME;
             }

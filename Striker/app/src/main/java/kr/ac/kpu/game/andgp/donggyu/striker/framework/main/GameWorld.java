@@ -91,11 +91,11 @@ public class GameWorld {
     }
 
     public void captureTouch(Touchable obj) {
-        Log.d(TAG, "Capture: " + obj);
+//        Log.d(TAG, "Capture: " + obj);
         capturingObject = obj;
     }
     public void releaseTouch() {
-        Log.d(TAG, "Release: " + capturingObject);
+//        Log.d(TAG, "Release: " + capturingObject);
         capturingObject = null;
     }
     public boolean onTouchEvent(MotionEvent event) {
@@ -117,6 +117,17 @@ public class GameWorld {
 
     public void removeObject(GameObject gameObject) {
         trash.add(gameObject);
+    }
+
+    public void removeAllObjectsAt(int layer) {
+        ArrayList<GameObject> objects = objectsAtLayer(layer);
+        while (!objects.isEmpty()) {
+            GameObject obj = objects.remove(0);
+            if (obj instanceof Recyclable) {
+                ((Recyclable) obj).recycle();
+                recyclePool.add(obj);
+            }
+        }
     }
 }
 

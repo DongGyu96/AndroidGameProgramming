@@ -16,10 +16,14 @@ public class BitmapObject extends GameObject implements BoxCollidable {
     protected int height;
 
     public BitmapObject(float x, float y, int width, int height, int resId) {
-        sbmp = SharedBitmap.load(resId);
         this.x = x;
         this.y = y;
         this.dstRect = new RectF();
+
+        if (resId == 0) {
+            return;
+        }
+        sbmp = SharedBitmap.load(resId);
         if (width == 0) {
             width = UIBridge.x(sbmp.getWidth());
         } else if (width < 0) {
