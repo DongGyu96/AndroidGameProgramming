@@ -38,6 +38,11 @@ public class SecondScene extends GameScene {
     private int playerType;
     private GameObject player;
 
+    public SecondScene(int select) {
+        super();
+        playerType = select;
+    }
+
     public enum Layer {
         bg, item, boss, enemy, enemy_bullet, bullet, player, ui, COUNT
     }
@@ -116,6 +121,10 @@ public class SecondScene extends GameScene {
 
 
         if(playerType == 0) {
+            player = new F117(cx, sh - mdpi_100, 400.0f, 400.0f);
+            gameWorld.add(Layer.player.ordinal(), player);
+        }
+        else {
             player = new F117(cx, sh - mdpi_100, 400.0f, 400.0f);
             gameWorld.add(Layer.player.ordinal(), player);
         }

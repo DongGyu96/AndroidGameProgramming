@@ -44,17 +44,35 @@ public class SelectScene extends GameScene {
         int cy = UIBridge.metrics.center.y;
         int y = cy + UIBridge.y(250);
 
-        selectPlayer = new SelectPlayer(cx, cy, UIBridge.x(400), UIBridge.y(220 - 44));
+        selectPlayer = new SelectPlayer(cx, cy - UIBridge.y(100), UIBridge.x(380), UIBridge.y(200));
         gameWorld.add(Layer.ui.ordinal(), selectPlayer);
 
         Button button = new Button(cx, y, R.mipmap.btn_start_game, R.mipmap.blue_round_btn, R.mipmap.red_round_btn);
         button.setOnClickRunnable(new Runnable() {
             @Override
             public void run() {
-                SecondScene scene = new SecondScene();
+                SecondScene scene = new SecondScene(selectPlayer.getSelect());
                 scene.push();
             }
         });
         gameWorld.add(Layer.ui.ordinal(), button);
+
+        Button leftButton = new Button(UIBridge.x(30), cy, R.mipmap.left, R.mipmap.blue_round_btn, R.mipmap.red_round_btn);
+        leftButton.setOnClickRunnable(new Runnable() {
+            @Override
+            public void run() {
+                selectPlayer.select(0);
+            }
+        });
+        gameWorld.add(Layer.ui.ordinal(), leftButton);
+
+        Button rightButton = new Button(UIBridge.metrics.size.x - UIBridge.x(30), cy, R.mipmap.right, R.mipmap.blue_round_btn, R.mipmap.red_round_btn);
+        rightButton.setOnClickRunnable(new Runnable() {
+            @Override
+            public void run() {
+                selectPlayer.select(1);
+            }
+        });
+        gameWorld.add(Layer.ui.ordinal(), rightButton);
     }
 }
