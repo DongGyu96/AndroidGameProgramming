@@ -15,6 +15,7 @@ import kr.ac.kpu.game.andgp.donggyu.striker.framework.main.UIBridge;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.obj.AnimObject;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.obj.BitmapObject;
 import kr.ac.kpu.game.andgp.donggyu.striker.game.obj.Boss_Bomber;
+import kr.ac.kpu.game.andgp.donggyu.striker.game.obj.Boss_UFO;
 import kr.ac.kpu.game.andgp.donggyu.striker.game.obj.Helicopter;
 import kr.ac.kpu.game.andgp.donggyu.striker.game.obj.MediumPlane;
 import kr.ac.kpu.game.andgp.donggyu.striker.game.obj.SmallPlane;
@@ -110,7 +111,12 @@ public class TextMap {
                 break;
             case 'B':
                 layer = SecondScene.Layer.boss;
-                obj = Boss_Bomber.get(UIBridge.metrics.size.x / 2, -100, 0.f, 3 * blockSize * 0.75f);
+                obj = new Boss_Bomber(UIBridge.metrics.size.x / 2, -100, 0.f, 3 * blockSize * 0.75f);
+                setPause(true);
+                break;
+            case 'P':
+                layer = SecondScene.Layer.boss;
+                obj = new Boss_UFO(UIBridge.metrics.size.x / 2, -100, 0.f, 3 * blockSize * 0.75f);
                 setPause(true);
                 break;
         }

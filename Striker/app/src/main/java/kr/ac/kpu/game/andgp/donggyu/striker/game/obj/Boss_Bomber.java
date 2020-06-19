@@ -15,46 +15,28 @@ import kr.ac.kpu.game.andgp.donggyu.striker.framework.main.GameTimer;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.main.RecyclePool;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.main.UIBridge;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.obj.AnimObject;
+import kr.ac.kpu.game.andgp.donggyu.striker.framework.res.bitmap.FrameAnimationBitmap;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.util.CollisionHelper;
 import kr.ac.kpu.game.andgp.donggyu.striker.game.scene.SecondScene;
 
-public class Boss_Bomber extends AnimObject implements Recyclable, BoxCollidable {
+public class Boss_Bomber extends AnimObject implements BoxCollidable {
     private static final float MAX_ATTACK_COOLTIME = 1.2f;
+    private final FrameAnimationBitmap fabDead;
     private float attackCoolTime;
     protected float dx, dy;
     private Boss_Bomber_Wing leftWing;
     private Boss_Bomber_Wing rightWing;
 
-    protected Boss_Bomber(float x, float y, float dx, float dy) {
-        super(x, y, 204 * 4, 110 * 4, R.mipmap.boss1, 60, 7);
+    public Boss_Bomber(float x, float y, float dx, float dy) {
+        super(x, y, 204 * 4, 110 * 4, R.mipmap.boss1, 20, 7);
         this.dx = dx;
         this.dy = dy;
         this.attackCoolTime = MAX_ATTACK_COOLTIME;
         this.hp = 80;
         fab.reset();
+        this.fabDead = new FrameAnimationBitmap(R.mipmap.boss1_dead, 10, 1);
         AddLeftRightWing();
     }
-
-    public static Boss_Bomber get(float x, float y, float dx, float dy) {
-        RecyclePool rpool = GameScene.getTop().getGameWorld().getRecyclePool();
-
-        Boss_Bomber enemy = (Boss_Bomber) rpool.get(Boss_Bomber.class);
-        if (enemy == null) {
-            enemy = new Boss_Bomber(x, y, dx, dy);
-        } else {
-            enemy.x = x;
-            enemy.y = y;
-            enemy.width = 204 * 4;
-            enemy.height = 110 * 4;
-            enemy.hp = 80;
-            enemy.attackCoolTime = MAX_ATTACK_COOLTIME;
-            enemy.fab.setBitmapResource(R.mipmap.boss1);
-            enemy.fab.reset();
-            enemy.AddLeftRightWing();
-        }
-        return enemy;
-    }
-
     private void AddLeftRightWing() {
         leftWing = new Boss_Bomber_Wing(x - UIBridge.x(110), y + UIBridge.y(30), dx, dy, R.mipmap.boss1_left);
         SecondScene.get().getGameWorld().add(SecondScene.Layer.enemy.ordinal(), leftWing);
@@ -74,11 +56,6 @@ public class Boss_Bomber extends AnimObject implements Recyclable, BoxCollidable
         rect.top = y - hh;
         rect.right = x + hw;
         rect.bottom = y + hh;
-    }
-
-    @Override
-    public void recycle() {
-
     }
 
     @Override
@@ -138,6 +115,7 @@ public class Boss_Bomber extends AnimObject implements Recyclable, BoxCollidable
             rightWing.Damage(9999);
             remove();
             SecondScene.get().getGameWorld().add(SecondScene.Layer.enemy.ordinal(), Explosion.get(x, y, width, height));
+            SecondScene.get().addScore(1200);
             SecondScene.get().pause(false);
         }
     }

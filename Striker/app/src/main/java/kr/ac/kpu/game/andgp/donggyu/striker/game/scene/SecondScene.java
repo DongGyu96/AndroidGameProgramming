@@ -21,6 +21,7 @@ import kr.ac.kpu.game.andgp.donggyu.striker.game.map.TextMap;
 import kr.ac.kpu.game.andgp.donggyu.striker.game.obj.CityBackground;
 import kr.ac.kpu.game.andgp.donggyu.striker.game.obj.F117;
 import kr.ac.kpu.game.andgp.donggyu.striker.game.obj.Helicopter;
+import kr.ac.kpu.game.andgp.donggyu.striker.game.obj.Joystick;
 import kr.ac.kpu.game.andgp.donggyu.striker.game.obj.MediumPlane;
 import kr.ac.kpu.game.andgp.donggyu.striker.game.obj.SmallPlane;
 
@@ -35,6 +36,7 @@ public class SecondScene extends GameScene {
     private static SecondScene instance;
 
     private int playerType;
+    private GameObject player;
 
     public enum Layer {
         bg, item, boss, enemy, enemy_bullet, bullet, player, ui, COUNT
@@ -83,20 +85,14 @@ public class SecondScene extends GameScene {
         int cx = UIBridge.metrics.center.x;
         int cy = UIBridge.metrics.center.y;
 
-//        gameWorld.add(Layer.bg.ordinal(), new ImageScrollBackground(R.mipmap.cookie_run_bg_1, ImageScrollBackground.Orientation.horizontal, -100));
-//        gameWorld.add(Layer.bg.ordinal(), new ImageScrollBackground(R.mipmap.cookie_run_bg_1_2, ImageScrollBackground.Orientation.horizontal, -200));
-//        gameWorld.add(Layer.bg.ordinal(), new ImageScrollBackground(R.mipmap.cookie_run_bg_1_3, ImageScrollBackground.Orientation.horizontal, -300));
         gameWorld.add(Layer.bg.ordinal(), new CityBackground());
-
-        if(playerType == 0) {
-            gameWorld.add(Layer.player.ordinal(), new F117(cx, sh - mdpi_100, 400.0f, 0));
-        }
+        gameWorld.add(Layer.bg.ordinal(), new ImageScrollBackground(R.mipmap.clouds, ImageScrollBackground.Orientation.vertical, 100));
 
         RectF rbox = new RectF(UIBridge.x(-52), UIBridge.y(20), UIBridge.x(-20), UIBridge.y(62));
         scoreObject = new ScoreObject(R.mipmap.number_64x84, rbox);
         gameWorld.add(SecondScene.Layer.ui.ordinal(), scoreObject);
 
-        Button btnSettings = new Button(UIBridge.metrics.size.x - UIBridge.x(30), UIBridge.y(30), R.mipmap.btn_settings, R.mipmap.blue_round_btn, R.mipmap.red_round_btn);
+        Button btnSettings = new Button(cx, UIBridge.y(30), R.mipmap.btn_settings, R.mipmap.blue_round_btn, R.mipmap.red_round_btn);
         btnSettings.setOnClickRunnable(new Runnable() {
             @Override
             public void run() {
@@ -106,6 +102,28 @@ public class SecondScene extends GameScene {
             }
         });
         gameWorld.add(SecondScene.Layer.ui.ordinal(), btnSettings);
+
+        TextButton btnSkill = new TextButton(UIBridge.x(60), UIBridge.metrics.size.y - UIBridge.y(50), "Skill", UIBridge.x(100) / 3);
+        btnSkill.setOnClickRunnable(new Runnable() {
+            @Override
+            public void run() {
+                F117 f117 = (F117)player;
+                f117.activeSkill();;
+                return;
+            }
+        });
+        gameWorld.add(SecondScene.Layer.ui.ordinal(), btnSkill);
+
+
+        if(playerType == 0) {
+            player = new F117(cx, sh - mdpi_100, 400.0f, 400.0f);
+            gameWorld.add(Layer.player.ordinal(), player);
+        }
+
+        Joystick joystick = new Joystick(-500, -500, Joystick.Direction.normal, 100);
+        gameWorld.add(Layer.ui.ordinal(), joystick);
+        F117 f117 = (F117)player;
+        f117.setJoystick(joystick);
     }
 
     public void addScore(int amount) {

@@ -18,10 +18,10 @@ import kr.ac.kpu.game.andgp.donggyu.striker.framework.res.bitmap.FrameAnimationB
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.util.CollisionHelper;
 import kr.ac.kpu.game.andgp.donggyu.striker.game.scene.SecondScene;
 
-public class F117 extends AnimObject implements Touchable, BoxCollidable {
+public class F117 extends AnimObject implements BoxCollidable {
     private static final int MAX_POWER = 4;
     private static final float ATTACK_COOL_TIME = 0.15f;
-    private static final float INVINCIBLE_TIME = 1.f;
+    private static final float INVINCIBLE_TIME = 3.f;
     private final FrameAnimationBitmap fabSkill;
     private boolean invincible;
     private float invincibleTime;
@@ -32,46 +32,48 @@ public class F117 extends AnimObject implements Touchable, BoxCollidable {
     private final FrameAnimationBitmap fabRight;
     private final FrameAnimationBitmap fabLeft;
     protected float dx, dy;
+    private Joystick joystick;
 
-    @Override
-    public boolean onTouchEvent(MotionEvent e) {
-        if(state == State.skill || state == State.boost) {
-            return false;
-        }
-        int action = e.getAction();
-        if(action == MotionEvent.ACTION_DOWN) {
-            int cx = UIBridge.metrics.center.x;
-            if(e.getX() > cx) {
-                state = State.right;
-                fabRight.reset();
-                fabLeft.reset();
-            }
-            else {
-                state = State.left;
-                fabRight.reset();
-                fabLeft.reset();
-            }
-            return true;
-        }
-        if(action == MotionEvent.ACTION_MOVE) {
-            int cx = UIBridge.metrics.center.x;
-
-            if(e.getX() > cx) {
-                state = State.right;
-                fabLeft.reset();
-            }
-            else {
-                state = State.left;
-                fabRight.reset();
-            }
-            return true;
-        }
-        if(action == MotionEvent.ACTION_UP) {
-            state = State.idle;
-            return false;
-        }
-        return true;
-    }
+//
+//    @Override
+//    public boolean onTouchEvent(MotionEvent e) {
+//        if(state == State.skill || state == State.boost) {
+//            return false;
+//        }
+//        int action = e.getAction();
+//        if(action == MotionEvent.ACTION_DOWN) {
+//            int cx = UIBridge.metrics.center.x;
+//            if(e.getX() > cx) {
+//                state = State.right;
+//                fabRight.reset();
+//                fabLeft.reset();
+//            }
+//            else {
+//                state = State.left;
+//                fabRight.reset();
+//                fabLeft.reset();
+//            }
+//            return false;
+//        }
+//        if(action == MotionEvent.ACTION_MOVE) {
+//            int cx = UIBridge.metrics.center.x;
+//
+//            if(e.getX() > cx) {
+//                state = State.right;
+//                fabLeft.reset();
+//            }
+//            else {
+//                state = State.left;
+//                fabRight.reset();
+//            }
+//            return true;
+//        }
+//        if(action == MotionEvent.ACTION_UP) {
+//            state = State.idle;
+//            return false;
+//        }
+//        return false;
+//    }
 
     @Override
     public void getBox(RectF rect) {
@@ -84,6 +86,13 @@ public class F117 extends AnimObject implements Touchable, BoxCollidable {
         rect.top = y - hh;
         rect.right = x + hw;
         rect.bottom = y + hh;
+    }
+
+    public void activeSkill() {
+        if(state != State.skill) {
+            state = State.skill;
+            fabSkill.reset();
+        }
     }
 
     private enum State {
@@ -105,7 +114,7 @@ public class F117 extends AnimObject implements Touchable, BoxCollidable {
         this.fabLeft.SetReverse(true);
         this.dx = dx;
         this.dy = dy;
-        this.state = State.skill;
+        this.state = State.idle;
         this.power = 1;
         this.hp = 5;
         this.attackCoolTime = ATTACK_COOL_TIME;
@@ -124,32 +133,53 @@ public class F117 extends AnimObject implements Touchable, BoxCollidable {
                 state = State.idle;
         }
 
-        if(state != State.skill && state != State.boost) {
+        if(state != State.boost) {
             if(invincible) {
                 invincibleTime -= seconds;
                 if(invincibleTime < 0.f) {
                     invincible = false;
                 }
             }
-            if(state == State.right) {
-                if(x < UIBridge.metrics.size.x) {
-                    x += dx * seconds;
-                }
-            }
-            else if(state == State.left) {
-                if(x > 0) {
-                    x -= dx * seconds;
+
+            float xdir = joystick.getHorzDirection();
+            float ydir = joystick.getVerticalDirection();
+            x += xdir * dx * seconds;
+            y += ydir * dy * seconds;
+            if(state != State.skill) {
+                if (xdir < 0.f) {
+                    state = State.left;
+                    fabRight.reset();
+                } else if (xdir > 0.f) {
+                    state = State.right;
+                    fabLeft.reset();
+                } else {
+                    state = State.idle;
+                    fabRight.reset();
+                    fabLeft.reset();
                 }
             }
 
-            attackCoolTime -= seconds;
-            if (attackCoolTime < 0.f) {
-                SecondScene.get().getGameWorld().add(SecondScene.Layer.bullet.ordinal(), Bullet.get(x, y, 92, 164, BULLET_IMAGE[power - 1], 0.f, -1000.f, true, power, 4));
-                attackCoolTime = ATTACK_COOL_TIME;
+            if(x < 0) {
+                x = 0;
+            } else if(x > UIBridge.metrics.size.x) {
+                x = UIBridge.metrics.size.x;
             }
-            if(!invincible) {
-                checkBulletCollision();
-                checkEnemyCollision();
+            if(y < 0) {
+                y = 0;
+            } else if(y > UIBridge.metrics.size.y) {
+                y = UIBridge.metrics.size.y;
+            }
+
+            if(state != State.skill) {
+                attackCoolTime -= seconds;
+                if (attackCoolTime < 0.f) {
+                    SecondScene.get().getGameWorld().add(SecondScene.Layer.bullet.ordinal(), Bullet.get(x, y, 92, 164, BULLET_IMAGE[power - 1], 0.f, -1000.f, true, power, 4));
+                    attackCoolTime = ATTACK_COOL_TIME;
+                }
+                if (!invincible) {
+                    checkBulletCollision();
+                    checkEnemyCollision();
+                }
             }
         }
     }
@@ -298,5 +328,9 @@ public class F117 extends AnimObject implements Touchable, BoxCollidable {
                 fabRight.draw(canvas, dstRect, null);
             }
         }
+    }
+
+    public void setJoystick(Joystick joystick) {
+        this.joystick = joystick;
     }
 }

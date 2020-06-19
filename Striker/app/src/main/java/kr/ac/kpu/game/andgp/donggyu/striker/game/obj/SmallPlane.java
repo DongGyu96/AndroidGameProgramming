@@ -90,6 +90,7 @@ public class SmallPlane extends BitmapObject implements Recyclable, BoxCollidabl
         if(hp < 0) {
             remove();
             SecondScene.get().getGameWorld().add(SecondScene.Layer.enemy.ordinal(), Explosion.get(x, y, width, height));
+            SecondScene.get().addScore(100);
         }
     }
 

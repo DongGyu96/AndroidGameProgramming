@@ -78,7 +78,8 @@ public class MainWorld extends GameWorld {
 
 //        scorePaint.setTextSize(100);
 //        scorePaint.setColor(Color.BLACK);
-//        scoreAnimator = ObjectAnimator.ofInt(this, "scoreDisplay", 0);
+//        scoreAnimator = ObjectAnimator
+//        .ofInt(this, "scoreDisplay", 0);
         scoreObject = new ScoreObject(800, 100, R.mipmap.number_64x84);
 
         highscoreObject = new ScoreObject(800, 20, R.mipmap.number_24x32);

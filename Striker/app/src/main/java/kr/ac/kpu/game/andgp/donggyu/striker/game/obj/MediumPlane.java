@@ -96,6 +96,7 @@ public class MediumPlane extends BitmapObject implements Recyclable, BoxCollidab
         if(hp < 0) {
             remove();
             SecondScene.get().getGameWorld().add(SecondScene.Layer.enemy.ordinal(), Explosion.get(x, y, width, height));
+            SecondScene.get().addScore(250);
         }
     }
 
