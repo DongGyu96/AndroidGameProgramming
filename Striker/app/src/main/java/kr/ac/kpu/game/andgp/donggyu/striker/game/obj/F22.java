@@ -3,14 +3,12 @@ package kr.ac.kpu.game.andgp.donggyu.striker.game.obj;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.view.MotionEvent;
 
 import java.util.ArrayList;
 import java.util.Random;
 
 import kr.ac.kpu.game.andgp.donggyu.striker.R;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.iface.BoxCollidable;
-import kr.ac.kpu.game.andgp.donggyu.striker.framework.iface.Touchable;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.main.GameObject;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.main.GameTimer;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.main.UIBridge;
@@ -20,10 +18,9 @@ import kr.ac.kpu.game.andgp.donggyu.striker.framework.util.CollisionHelper;
 import kr.ac.kpu.game.andgp.donggyu.striker.game.scene.GameOverScene;
 import kr.ac.kpu.game.andgp.donggyu.striker.game.scene.SecondScene;
 
-public class F117 extends AnimObject implements BoxCollidable {
-    private static final int MAX_POWER = 4;
-    private static final float ATTACK_COOL_TIME = 0.15f;
-    private static final float SKILLATTACK_COOL_TIME = 0.05f;
+public class F22 extends AnimObject implements BoxCollidable {
+    private static final int MAX_POWER = 3;
+    private static final float ATTACK_COOL_TIME = 0.1f;
     private static final float INVINCIBLE_TIME = 3.f;
     private static final int MAX_SKILL_COUNT = 7;
     private static final int MAX_HP = 5;
@@ -36,7 +33,6 @@ public class F117 extends AnimObject implements BoxCollidable {
     private float invincibleTime;
     private int invincibleCount;
     private float attackCoolTime;
-    private float skillCoolTime;
     private State state;
     private final int power;
     private final FrameAnimationBitmap fabRight;
@@ -44,47 +40,6 @@ public class F117 extends AnimObject implements BoxCollidable {
     protected float dx, dy;
     private Joystick joystick;
     private Random random;
-
-//
-//    @Override
-//    public boolean onTouchEvent(MotionEvent e) {
-//        if(state == State.skill || state == State.boost) {
-//            return false;
-//        }
-//        int action = e.getAction();
-//        if(action == MotionEvent.ACTION_DOWN) {
-//            int cx = UIBridge.metrics.center.x;
-//            if(e.getX() > cx) {
-//                state = State.right;
-//                fabRight.reset();
-//                fabLeft.reset();
-//            }
-//            else {
-//                state = State.left;
-//                fabRight.reset();
-//                fabLeft.reset();
-//            }
-//            return false;
-//        }
-//        if(action == MotionEvent.ACTION_MOVE) {
-//            int cx = UIBridge.metrics.center.x;
-//
-//            if(e.getX() > cx) {
-//                state = State.right;
-//                fabLeft.reset();
-//            }
-//            else {
-//                state = State.left;
-//                fabRight.reset();
-//            }
-//            return true;
-//        }
-//        if(action == MotionEvent.ACTION_UP) {
-//            state = State.idle;
-//            return false;
-//        }
-//        return false;
-//    }
 
     @Override
     public void getBox(RectF rect) {
@@ -125,32 +80,30 @@ public class F117 extends AnimObject implements BoxCollidable {
     }
 
     private final int[] BULLET_IMAGE = {
-            R.mipmap.attack1_f117,
-            R.mipmap.attack2_f117,
-            R.mipmap.attack3_f117,
-            R.mipmap.attack4_f117,
+            R.mipmap.attack1_f22,
+            R.mipmap.attack2_f22,
+            R.mipmap.attack3_f22,
     };
 
-    public F117(float x, float y, float dx, float dy) {
-        super(x, y, 124, 192, R.mipmap.f117, 0, 1);
-        this.fabRight = new FrameAnimationBitmap(R.mipmap.f117_right, 10, 3);
-        this.fabLeft = new FrameAnimationBitmap(R.mipmap.f117_left, 10, 3);
-        this.fabSkill = new FrameAnimationBitmap(R.mipmap.skill_f117, 15, 47);
+    public F22(float x, float y, float dx, float dy) {
+        super(x, y, 124, 192, R.mipmap.f22, 10, 1);
+        this.fabRight = new FrameAnimationBitmap(R.mipmap.f22_right, 10, 3);
+        this.fabLeft = new FrameAnimationBitmap(R.mipmap.f22_left, 10, 3);
+        this.fabSkill = new FrameAnimationBitmap(R.mipmap.skill_f22, 15, 47);
         this.fabLeft.SetReverse(true);
         this.dx = dx;
         this.dy = dy;
         this.state = State.idle;
-        this.power = 2;
+        this.power = 1;
         this.hp = MAX_HP;
         this.attackCoolTime = ATTACK_COOL_TIME;
-        this.skillCoolTime = SKILLATTACK_COOL_TIME;
         this.invincible = false;
         this.invincibleTime = INVINCIBLE_TIME;
         this.invincibleCount = 0;
         this.random = new Random();
         this.fabSkillIcon = new FrameAnimationBitmap(R.mipmap.bombicon, 0, 1);
-        this.fabHpIcon = new FrameAnimationBitmap(R.mipmap.f117, 0, 1);
-        this.fabName = new FrameAnimationBitmap(R.mipmap.f117_title, 0, 1);
+        this.fabHpIcon = new FrameAnimationBitmap(R.mipmap.f22, 0, 1);
+        this.fabName = new FrameAnimationBitmap(R.mipmap.f22_title, 0, 1);
         this.skillCount = MAX_SKILL_COUNT;
     }
 
@@ -160,14 +113,34 @@ public class F117 extends AnimObject implements BoxCollidable {
 
         if(state == State.skill)
         {
-            skillCoolTime -= seconds;
-            if(fabSkill.getFrame() > 7) {
-                if(skillCoolTime < 0.f) {
-                    int posx = random.nextInt(UIBridge.metrics.size.x);
-                    int posy = random.nextInt(UIBridge.metrics.size.y);
-                    int size = random.nextInt(UIBridge.x(100)) + UIBridge.x(50);
-                    SecondScene.get().getGameWorld().add(SecondScene.Layer.bullet.ordinal(), Bomb.get(posx, posy, size, size, true));
-                    skillCoolTime = SKILLATTACK_COOL_TIME;
+            if(47 / 2 == fabSkill.getFrame()) {
+                SecondScene.get().getGameWorld().add(SecondScene.Layer.bullet.ordinal(), Bomb.get(UIBridge.metrics.center.x, UIBridge.metrics.center.y, UIBridge.metrics.size.x, UIBridge.metrics.size.x, false));
+                ArrayList<GameObject> enemys = SecondScene.get().getGameWorld().objectsAtLayer(SecondScene.Layer.enemy.ordinal());
+                ArrayList<GameObject> bullets = SecondScene.get().getGameWorld().objectsAtLayer(SecondScene.Layer.enemy_bullet.ordinal());
+                for (GameObject obj : enemys) {
+                    if (obj instanceof Helicopter) {
+                        Helicopter enemy = (Helicopter) obj;
+                        enemy.Damage(10);
+                    }
+                    else if (obj instanceof SmallPlane) {
+                        SmallPlane enemy = (SmallPlane) obj;
+                        enemy.Damage(10);
+                    }
+                    else if (obj instanceof MediumPlane) {
+                        MediumPlane enemy = (MediumPlane) obj;
+                        enemy.Damage(10);
+                    }
+                    else {
+                        continue;
+                    }
+                }
+                for (GameObject obj : bullets) {
+                    if (!(obj instanceof Bullet)) {
+                        continue;
+                    }
+                    Bullet bullet = (Bullet) obj;
+                    bullet.remove();
+                    SecondScene.get().getGameWorld().add(SecondScene.Layer.bullet.ordinal(), Explosion.get(bullet.getX(), bullet.getY(), 40, 40));
                 }
             }
             if(fabSkill.done())
@@ -289,6 +262,8 @@ public class F117 extends AnimObject implements BoxCollidable {
 
     @Override
     public void draw(Canvas canvas) {
+        RectF iconRect = new RectF();
+
         if(invincible) {
             invincibleCount++;
             if (invincibleCount % 2 == 0) {
@@ -322,9 +297,9 @@ public class F117 extends AnimObject implements BoxCollidable {
 
                 Rect srcRect = new Rect();
                 srcRect.top = 0;
-                srcRect.bottom = 48;
-                srcRect.left = 31 * 0;
-                srcRect.right = srcRect.left + 31;
+                srcRect.bottom = 40;
+                srcRect.left = 32 * 0;
+                srcRect.right = srcRect.left + 32;
 
                 fabLeft.draw(canvas, srcRect, dstRect, null);
             }
@@ -349,9 +324,9 @@ public class F117 extends AnimObject implements BoxCollidable {
 
                 Rect srcRect = new Rect();
                 srcRect.top = 0;
-                srcRect.bottom = 48;
-                srcRect.left = 31 * 2;
-                srcRect.right = srcRect.left + 31;
+                srcRect.bottom = 40;
+                srcRect.left = 32 * 2;
+                srcRect.right = srcRect.left + 32;
 
                 fabRight.draw(canvas, srcRect, dstRect, null);
             }
@@ -365,19 +340,20 @@ public class F117 extends AnimObject implements BoxCollidable {
                 fabRight.draw(canvas, dstRect, null);
             }
         }
+
         DrawUIIcon(canvas);
     }
 
     private void DrawUIIcon(Canvas canvas) {
         RectF iconRect = new RectF();
-        for(int i = 0; i < skillCount; ++i)  {
+        for (int i = 0; i < skillCount; ++i) {
             iconRect.left = UIBridge.x(100) + UIBridge.x(30 * (i + 1));
             iconRect.right = iconRect.left + UIBridge.x(30);
             iconRect.top = UIBridge.metrics.size.y - UIBridge.y(55);
             iconRect.bottom = UIBridge.metrics.size.y - UIBridge.y(25);
             fabSkillIcon.draw(canvas, iconRect, null);
         }
-        for(int i = 0; i < hp; ++i) {
+        for (int i = 0; i < hp; ++i) {
             iconRect.left = UIBridge.x(30 * (i + 1)) - UIBridge.x(15);
             iconRect.right = iconRect.left + UIBridge.x(30);
             iconRect.top = UIBridge.y(55);

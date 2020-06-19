@@ -54,6 +54,8 @@ public class FrameAnimationBitmap {
         reset();
     }
 
+    public int getFrame() {return timer.getIndex();}
+
     public void draw(Canvas canvas, RectF rect, Paint paint) {
         if(reverse) {
             int index = timer.getIndex();

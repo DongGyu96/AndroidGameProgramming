@@ -67,8 +67,8 @@ public class GameOverScene extends GameScene {
         int y = UIBridge.metrics.center.y;
         int mdpi_100 = UIBridge.x(100);
 
-        int buttonWidth = screenWidth * 2 / 5;
-        int buttonHeight = screenHeight / 5;
+        int buttonWidth =  UIBridge.x(200);
+        int buttonHeight = UIBridge.y(50);
 
         gameWorld.add(Layer.bg.ordinal(), new BitmapObject(cx, y, screenWidth, screenHeight, R.mipmap.black_transparent));
 //        y += UiBridge.y(100);
@@ -78,7 +78,7 @@ public class GameOverScene extends GameScene {
         button.setSize(buttonWidth, buttonHeight);
         gameWorld.add(Layer.ui.ordinal(), button);
 
-        y += UIBridge.y(100);
+        y += UIBridge.y(60);
         button = new TextButton(cx, y, "Restart", textSize);
         button.setSize(buttonWidth, buttonHeight);
         button.setOnClickRunnable(new Runnable() {
@@ -90,9 +90,17 @@ public class GameOverScene extends GameScene {
         });
         gameWorld.add(Layer.ui.ordinal(), button);
 
-        y += UIBridge.y(100);
-        button = new TextButton(cx, y, "Another", textSize);
+        y += UIBridge.y(60);
+        button = new TextButton(cx, y, "MainMenu", textSize);
         button.setSize(buttonWidth, buttonHeight);
+        button.setOnClickRunnable(new Runnable() {
+            @Override
+            public void run() {
+                pop();
+                pop();
+                pop();
+            }
+        });
         gameWorld.add(Layer.ui.ordinal(), button);
     }
 }

@@ -74,7 +74,8 @@ public class Boss_UFO extends AnimObject implements BoxCollidable {
     @Override
     public void update() {
         if(state == State.Dead) {
-            SecondScene.get().getGameWorld().add(SecondScene.Layer.enemy.ordinal(), Explosion.get(x + random.nextInt(100) - 50, y + random.nextInt(100) - 50, 100, 100));
+            SecondScene.get().getGameWorld().add(SecondScene.Layer.enemy.ordinal(),
+                    Explosion.get(x + random.nextInt(200) - 100, y + random.nextInt(200) - 100, 100 + random.nextInt(50), 100 + random.nextInt(50)));
             if(fabDead.done()) {
                 remove();
                 SecondScene.get().addScore(1200);

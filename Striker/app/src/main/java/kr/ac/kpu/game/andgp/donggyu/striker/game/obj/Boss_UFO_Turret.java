@@ -38,7 +38,7 @@ public class Boss_UFO_Turret extends AnimObject implements BoxCollidable {
     }
     @Override
     public void getBox(RectF rect) {
-        int width = UIBridge.x(fab.getWidth()) / 2;
+        int width = UIBridge.x(fab.getWidth());
         int height = UIBridge.y(fab.getHeight()) / 2;
 
         int hw = width / 2;

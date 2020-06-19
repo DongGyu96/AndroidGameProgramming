@@ -20,6 +20,7 @@ import kr.ac.kpu.game.andgp.donggyu.striker.framework.obj.ui.TextButton;
 import kr.ac.kpu.game.andgp.donggyu.striker.game.map.TextMap;
 import kr.ac.kpu.game.andgp.donggyu.striker.game.obj.CityBackground;
 import kr.ac.kpu.game.andgp.donggyu.striker.game.obj.F117;
+import kr.ac.kpu.game.andgp.donggyu.striker.game.obj.F22;
 import kr.ac.kpu.game.andgp.donggyu.striker.game.obj.Helicopter;
 import kr.ac.kpu.game.andgp.donggyu.striker.game.obj.Joystick;
 import kr.ac.kpu.game.andgp.donggyu.striker.game.obj.MediumPlane;
@@ -97,7 +98,7 @@ public class SecondScene extends GameScene {
         scoreObject = new ScoreObject(R.mipmap.number_64x84, rbox);
         gameWorld.add(SecondScene.Layer.ui.ordinal(), scoreObject);
 
-        Button btnSettings = new Button(cx, UIBridge.y(30), R.mipmap.btn_settings, R.mipmap.blue_round_btn, R.mipmap.red_round_btn);
+        Button btnSettings = new Button(UIBridge.x(30), UIBridge.y(30), R.mipmap.btn_settings, R.mipmap.blue_round_btn, R.mipmap.red_round_btn);
         btnSettings.setOnClickRunnable(new Runnable() {
             @Override
             public void run() {
@@ -112,8 +113,15 @@ public class SecondScene extends GameScene {
         btnSkill.setOnClickRunnable(new Runnable() {
             @Override
             public void run() {
-                F117 f117 = (F117)player;
-                f117.activeSkill();;
+                if(playerType == 0) {
+                    F117 f117 = (F117) player;
+                    f117.activeSkill();
+
+                }
+                else {
+                    F22 f22 = (F22) player;
+                    f22.activeSkill();
+                }
                 return;
             }
         });
@@ -123,16 +131,19 @@ public class SecondScene extends GameScene {
         if(playerType == 0) {
             player = new F117(cx, sh - mdpi_100, 400.0f, 400.0f);
             gameWorld.add(Layer.player.ordinal(), player);
+            Joystick joystick = new Joystick(-500, -500, Joystick.Direction.normal, 100);
+            gameWorld.add(Layer.ui.ordinal(), joystick);
+            F117 f117 = (F117)player;
+            f117.setJoystick(joystick);
         }
         else {
-            player = new F117(cx, sh - mdpi_100, 400.0f, 400.0f);
+            player = new F22(cx, sh - mdpi_100, 700.0f, 700.0f);
             gameWorld.add(Layer.player.ordinal(), player);
+            Joystick joystick = new Joystick(-500, -500, Joystick.Direction.normal, 100);
+            gameWorld.add(Layer.ui.ordinal(), joystick);
+            F22 f22 = (F22)player;
+            f22.setJoystick(joystick);
         }
-
-        Joystick joystick = new Joystick(-500, -500, Joystick.Direction.normal, 100);
-        gameWorld.add(Layer.ui.ordinal(), joystick);
-        F117 f117 = (F117)player;
-        f117.setJoystick(joystick);
     }
 
     public void addScore(int amount) {
@@ -147,6 +158,14 @@ public class SecondScene extends GameScene {
         scoreObject.reset();
         for (int layer = Layer.item.ordinal(); layer <= Layer.bullet.ordinal(); layer++) {
             gameWorld.removeAllObjectsAt(layer);
+        }
+        if(playerType == 0) {
+            F117 f117 = (F117)player;
+            f117.restart();
+        }
+        else {
+            F22 f22 = (F22)player;
+            f22.restart();
         }
         map.reset();
     }

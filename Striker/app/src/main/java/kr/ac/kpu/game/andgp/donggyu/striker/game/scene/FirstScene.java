@@ -14,8 +14,10 @@ import kr.ac.kpu.game.andgp.donggyu.striker.framework.main.UIBridge;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.obj.BitmapObject;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.obj.ScoreObject;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.obj.ui.Button;
+import kr.ac.kpu.game.andgp.donggyu.striker.framework.obj.ui.TextButton;
 import kr.ac.kpu.game.andgp.donggyu.striker.game.obj.Ball;
 import kr.ac.kpu.game.andgp.donggyu.striker.game.obj.CityBackground;
+import kr.ac.kpu.game.andgp.donggyu.striker.ui.activity.MainActivity;
 
 public class FirstScene extends GameScene {
     private static final String TAG = FirstScene.class.getSimpleName();
@@ -57,7 +59,7 @@ public class FirstScene extends GameScene {
 //            gameWorld.add(Layer.enemy.ordinal(), ball);
 //        }
         gameWorld.add(Layer.bg.ordinal(), new CityBackground());
-        BitmapObject title = new BitmapObject(UIBridge.metrics.center.x, UIBridge.y(300), -110, -120, R.mipmap.title);
+        BitmapObject title = new BitmapObject(UIBridge.metrics.center.x, UIBridge.metrics.center.y, UIBridge.metrics.size.x, UIBridge.metrics.size.y, R.mipmap.title);
         gameWorld.add(Layer.bg.ordinal(), title);
         timer = new GameTimer(2, 1);
 

@@ -89,12 +89,20 @@ public class DialogScene extends GameScene {
         gameWorld.add(Layer.ui.ordinal(), button);
 
         y += UIBridge.y(60);
-        button = new TextButton(cx, y, "Something", textSize);
+        button = new TextButton(cx, y, "MainMenu", textSize);
         button.setSize(buttonWidth, buttonHeight);
+        button.setOnClickRunnable(new Runnable() {
+            @Override
+            public void run() {
+                pop();
+                pop();
+                pop();
+            }
+        });
         gameWorld.add(Layer.ui.ordinal(), button);
 
         y += UIBridge.y(60);
-        button = new TextButton(cx, y, "Another", textSize);
+        button = new TextButton(cx, y, "HighScore", textSize);
         button.setSize(buttonWidth, buttonHeight);
         gameWorld.add(Layer.ui.ordinal(), button);
     }
