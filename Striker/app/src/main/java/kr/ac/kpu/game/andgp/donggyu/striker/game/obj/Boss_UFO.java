@@ -44,7 +44,7 @@ public class Boss_UFO extends AnimObject implements BoxCollidable {
         this.dy = dy;
         this.attackCoolTime = MAX_ATTACK_COOLTIME;
         this.attack2CoolTime = MAX_ATTACK2_COOLTIME;
-        this.hp = 200;
+        this.hp = 220;
         fab.reset();
         this.fabOpen = new FrameAnimationBitmap(R.mipmap.boss2_hatchopen, 10, 8);
         this.fabFinal = new FrameAnimationBitmap(R.mipmap.boss2_final, 15, 8);

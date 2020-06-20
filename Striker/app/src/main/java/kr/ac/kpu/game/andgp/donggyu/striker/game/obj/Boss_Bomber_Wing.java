@@ -28,7 +28,7 @@ public class Boss_Bomber_Wing extends AnimObject implements BoxCollidable {
         this.dx = dx;
         this.dy = dy;
         this.attackCoolTime = MAX_ATTACK_COOLTIME;
-        this.hp = 50;
+        this.hp = 35;
         fab.reset();
     }
 
