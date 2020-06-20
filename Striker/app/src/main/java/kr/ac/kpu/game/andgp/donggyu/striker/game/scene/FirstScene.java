@@ -89,7 +89,17 @@ public class FirstScene extends GameScene {
             }
         });
         gameWorld.add(Layer.ui.ordinal(), button);
+
         y += UIBridge.y(100);
-        gameWorld.add(Layer.ui.ordinal(), new Button(cx, y, R.mipmap.btn_highscore, R.mipmap.blue_round_btn, R.mipmap.red_round_btn));
+        Button highscoreButton = new Button(cx, y, R.mipmap.btn_highscore, R.mipmap.blue_round_btn, R.mipmap.red_round_btn);
+        highscoreButton.setOnClickRunnable(new Runnable() {
+            @Override
+            public void run() {
+                SceneBGM.stop();
+                HighScoreScene scene = new HighScoreScene();
+                scene.push();
+            }
+        });
+        gameWorld.add(Layer.ui.ordinal(), highscoreButton);
     }
 }

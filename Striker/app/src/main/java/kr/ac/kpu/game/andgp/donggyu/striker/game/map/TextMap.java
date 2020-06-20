@@ -16,6 +16,7 @@ import kr.ac.kpu.game.andgp.donggyu.striker.framework.main.UIBridge;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.obj.AnimObject;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.obj.BitmapObject;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.res.sound.SoundEffects;
+import kr.ac.kpu.game.andgp.donggyu.striker.framework.util.Ranking;
 import kr.ac.kpu.game.andgp.donggyu.striker.game.obj.Boss_Bomber;
 import kr.ac.kpu.game.andgp.donggyu.striker.game.obj.Boss_UFO;
 import kr.ac.kpu.game.andgp.donggyu.striker.game.obj.Helicopter;
@@ -126,6 +127,7 @@ public class TextMap {
             case 'E': // Game Clear
                 SecondScene.get().BGMStop();
                 int type = SecondScene.get().getPlayerType();
+                Ranking.get().SetScore(SecondScene.get().getScore(), type);
                 GameClearScene scene = new GameClearScene(type);
                 scene.push();
                 break;

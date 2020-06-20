@@ -36,7 +36,7 @@ public class Joystick extends GameObject implements Touchable {
         this.direction = dir;
         this.sbmp = SharedBitmap.load(R.mipmap.joystick);
         this.handle = SharedBitmap.load(R.mipmap.joystick_handle);
-        this.down = false;
+        this.down = true;
         this.showTime = MAX_SHOW_TIME;
     }
 
@@ -62,7 +62,7 @@ public class Joystick extends GameObject implements Touchable {
     public void draw(Canvas canvas) {
         sbmp.draw(canvas, draw_x, draw_y);
         if (down) {
-            Log.d(TAG, "angle = " + angle + " dx=" + dx + " dy=" + dy);
+            //Log.d(TAG, "angle = " + angle + " dx=" + dx + " dy=" + dy);
             handle.draw(canvas, draw_x + dx + UIBridge.x(25), draw_y + dy + UIBridge.y(25));
         }
     }

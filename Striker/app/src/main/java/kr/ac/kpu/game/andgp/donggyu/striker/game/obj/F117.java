@@ -18,6 +18,7 @@ import kr.ac.kpu.game.andgp.donggyu.striker.framework.obj.AnimObject;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.res.bitmap.FrameAnimationBitmap;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.res.sound.SoundEffects;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.util.CollisionHelper;
+import kr.ac.kpu.game.andgp.donggyu.striker.framework.util.Ranking;
 import kr.ac.kpu.game.andgp.donggyu.striker.game.scene.GameOverScene;
 import kr.ac.kpu.game.andgp.donggyu.striker.game.scene.SecondScene;
 
@@ -290,6 +291,7 @@ public class F117 extends AnimObject implements BoxCollidable {
         else {
             // GameOver
             SecondScene.get().BGMStop();
+            Ranking.get().SetScore(SecondScene.get().getScore(), 0);
             GameOverScene scene = new GameOverScene();
             scene.push();
             return;

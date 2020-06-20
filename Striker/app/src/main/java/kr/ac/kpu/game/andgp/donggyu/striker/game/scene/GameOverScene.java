@@ -1,6 +1,9 @@
 package kr.ac.kpu.game.andgp.donggyu.striker.game.scene;
 
 import android.animation.ValueAnimator;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.view.animation.OvershootInterpolator;
 
@@ -13,14 +16,16 @@ import kr.ac.kpu.game.andgp.donggyu.striker.framework.main.UIBridge;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.obj.BitmapObject;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.obj.ui.Button;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.obj.ui.TextButton;
+import kr.ac.kpu.game.andgp.donggyu.striker.framework.obj.ui.TextObject;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.res.sound.SoundEffects;
+import kr.ac.kpu.game.andgp.donggyu.striker.framework.util.Ranking;
 
 public class GameOverScene extends GameScene {
     private static final String TAG = GameOverScene.class.getSimpleName();
     private MediaPlayer SceneBGM;
 
     public enum Layer {
-        bg, enemy, player, ui, COUNT
+        bg, enemy, ui, ui2, COUNT
     }
 
     @Override
@@ -39,9 +44,12 @@ public class GameOverScene extends GameScene {
 
         initObjects();
 
+        Ranking.get().AddRanking();
+        Ranking.get().SaveRanking();
+
         int mdpi_100 = UIBridge.y(100);
         //ValueAnimator animator =
-        ValueAnimator anim = ValueAnimator.ofFloat(UIBridge.metrics.size.y, mdpi_100);
+        ValueAnimator anim = ValueAnimator.ofFloat(mdpi_100, UIBridge.metrics.center.y);
         anim.setDuration(500);
         anim.setInterpolator(new OvershootInterpolator());
         anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -97,9 +105,8 @@ public class GameOverScene extends GameScene {
 //        y += UiBridge.y(100);
         TextButton button;
         int textSize = mdpi_100 / 3;
-        button = new TextButton(cx, y, "Game Over", textSize);
-        button.setSize(buttonWidth, buttonHeight);
-        gameWorld.add(Layer.ui.ordinal(), button);
+        TextObject title = new TextObject(cx - UIBridge.x(120), y - UIBridge.y(200), "Game Over", mdpi_100 / 2, Color.RED);
+        gameWorld.add(Layer.ui2.ordinal(), title);
 
         y += UIBridge.y(60);
         button = new TextButton(cx, y, "Restart", textSize);

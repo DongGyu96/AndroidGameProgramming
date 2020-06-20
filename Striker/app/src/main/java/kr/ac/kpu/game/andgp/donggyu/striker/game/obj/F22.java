@@ -16,6 +16,7 @@ import kr.ac.kpu.game.andgp.donggyu.striker.framework.obj.AnimObject;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.res.bitmap.FrameAnimationBitmap;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.res.sound.SoundEffects;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.util.CollisionHelper;
+import kr.ac.kpu.game.andgp.donggyu.striker.framework.util.Ranking;
 import kr.ac.kpu.game.andgp.donggyu.striker.game.scene.GameOverScene;
 import kr.ac.kpu.game.andgp.donggyu.striker.game.scene.SecondScene;
 
@@ -24,7 +25,7 @@ public class F22 extends AnimObject implements BoxCollidable {
     private static final float ATTACK_COOL_TIME = 0.1f;
     private static final float INVINCIBLE_TIME = 3.f;
     private static final int MAX_SKILL_COUNT = 7;
-    private static final int MAX_HP = 5;
+    private static final int MAX_HP = 0;
     private final FrameAnimationBitmap fabSkill;
     private final FrameAnimationBitmap fabSkillIcon;
     private final FrameAnimationBitmap fabHpIcon;
@@ -284,6 +285,7 @@ public class F22 extends AnimObject implements BoxCollidable {
         else {
             // GameOver
             SecondScene.get().BGMStop();
+            Ranking.get().SetScore(SecondScene.get().getScore(), 1);
             GameOverScene scene = new GameOverScene();
             scene.push();
             return;

@@ -12,6 +12,7 @@ import kr.ac.kpu.game.andgp.donggyu.striker.framework.obj.BitmapObject;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.obj.ui.Button;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.obj.ui.TextButton;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.res.sound.SoundEffects;
+import kr.ac.kpu.game.andgp.donggyu.striker.framework.util.Ranking;
 import kr.ac.kpu.game.andgp.donggyu.striker.game.obj.CityBackground;
 
 public class GameClearScene extends GameScene {
@@ -44,6 +45,10 @@ public class GameClearScene extends GameScene {
         SceneBGM = MediaPlayer.create(SoundEffects.get().getContext(), R.raw.ingamebgm2);
         SceneBGM.setLooping(true);
         SceneBGM.start();
+
+        Ranking.get().AddRanking();
+        Ranking.get().SaveRanking();
+
         initObjects();
     }
 

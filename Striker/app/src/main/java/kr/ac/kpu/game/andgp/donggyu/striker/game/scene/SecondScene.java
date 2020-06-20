@@ -63,6 +63,10 @@ public class SecondScene extends GameScene {
         }
     }
 
+    public int getScore() {
+        return scoreObject.getScoreValue();
+    }
+
     public enum Layer {
         bg, item, boss, enemy, enemy_bullet, bullet, player, ui, COUNT
     }

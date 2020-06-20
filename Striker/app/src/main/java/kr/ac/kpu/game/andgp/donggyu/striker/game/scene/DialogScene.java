@@ -108,6 +108,7 @@ public class DialogScene extends GameScene {
             @Override
             public void run() {
                 SecondScene.get().CHEAT();
+                pop();
             }
         });
         gameWorld.add(Layer.ui.ordinal(), button);
