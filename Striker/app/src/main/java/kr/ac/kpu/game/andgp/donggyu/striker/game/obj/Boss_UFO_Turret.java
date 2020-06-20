@@ -15,11 +15,12 @@ import kr.ac.kpu.game.andgp.donggyu.striker.framework.main.GameTimer;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.main.RecyclePool;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.main.UIBridge;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.obj.AnimObject;
+import kr.ac.kpu.game.andgp.donggyu.striker.framework.res.sound.SoundEffects;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.util.CollisionHelper;
 import kr.ac.kpu.game.andgp.donggyu.striker.game.scene.SecondScene;
 
 public class Boss_UFO_Turret extends AnimObject implements BoxCollidable {
-    private static final float MAX_ATTACK_COOLTIME = 1.2f;
+    private static final float MAX_ATTACK_COOLTIME = 0.8f;
     private boolean dead;
     private float attackCoolTime;
     protected float dx, dy;
@@ -28,7 +29,7 @@ public class Boss_UFO_Turret extends AnimObject implements BoxCollidable {
         this.dx = dx;
         this.dy = dy;
         this.attackCoolTime = MAX_ATTACK_COOLTIME;
-        this.hp = 80;
+        this.hp = 150;
         fab.reset();
         this.dead = false;
     }
@@ -63,18 +64,21 @@ public class Boss_UFO_Turret extends AnimObject implements BoxCollidable {
                 ArrayList<GameObject> player = SecondScene.get().getGameWorld().objectsAtLayer(SecondScene.Layer.player.ordinal());
                 float xDir, yDir;
                 for (GameObject obj : player) {
-                    xDir = obj.getX() - x;
-                    yDir = obj.getY() - y;
+                    for(int i = -3; i <= 3; ++i) {
+                        xDir = (obj.getX() + (UIBridge.x(50) * i)) - x;
+                        yDir = obj.getY() - y;
 
-                    float temp = (xDir*xDir)+(yDir*yDir);
-                    temp = (float)Math.sqrt(temp);
+                        float temp = (xDir * xDir) + (yDir * yDir);
+                        temp = (float) Math.sqrt(temp);
 
-                    xDir = xDir / temp;
-                    yDir = yDir / temp;
+                        xDir = xDir / temp;
+                        yDir = yDir / temp;
 
-                    SecondScene.get().getGameWorld().add(SecondScene.Layer.enemy_bullet.ordinal(),
-                            Bullet.get(x, y, 30, 30, R.mipmap.enemy_bullet, xDir * 400.f, yDir * 400.f, false, 1, 1));
+                        SecondScene.get().getGameWorld().add(SecondScene.Layer.enemy_bullet.ordinal(),
+                                Bullet.get(x, y, 30, 30, R.mipmap.enemy_bullet, xDir * 400.f, yDir * 400.f, false, 1, 1));
+                    }
                 }
+                SoundEffects.get().play(R.raw.attack2, 0.8f, 0.8f, 2, 0, 1);
                 attackCoolTime = MAX_ATTACK_COOLTIME;
             }
         }
@@ -101,6 +105,7 @@ public class Boss_UFO_Turret extends AnimObject implements BoxCollidable {
         if(hp < 0) {
             remove();
             dead = true;
+            SoundEffects.get().play(R.raw.long_bomb2, 0.9f, 0.9f, 3, 0, 1);
             SecondScene.get().getGameWorld().add(SecondScene.Layer.enemy.ordinal(), Explosion.get(x, y, width, height));
             SecondScene.get().addScore(550);
         }

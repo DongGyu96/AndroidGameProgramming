@@ -102,8 +102,14 @@ public class DialogScene extends GameScene {
         gameWorld.add(Layer.ui.ordinal(), button);
 
         y += UIBridge.y(60);
-        button = new TextButton(cx, y, "HighScore", textSize);
+        button = new TextButton(cx, y, "CHEAT!", textSize);
         button.setSize(buttonWidth, buttonHeight);
+        button.setOnClickRunnable(new Runnable() {
+            @Override
+            public void run() {
+                SecondScene.get().CHEAT();
+            }
+        });
         gameWorld.add(Layer.ui.ordinal(), button);
     }
 }

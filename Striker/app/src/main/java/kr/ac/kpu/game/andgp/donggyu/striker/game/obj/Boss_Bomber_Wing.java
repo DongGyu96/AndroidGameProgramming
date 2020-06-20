@@ -15,11 +15,12 @@ import kr.ac.kpu.game.andgp.donggyu.striker.framework.main.GameTimer;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.main.RecyclePool;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.main.UIBridge;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.obj.AnimObject;
+import kr.ac.kpu.game.andgp.donggyu.striker.framework.res.sound.SoundEffects;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.util.CollisionHelper;
 import kr.ac.kpu.game.andgp.donggyu.striker.game.scene.SecondScene;
 
 public class Boss_Bomber_Wing extends AnimObject implements BoxCollidable {
-    private static final float MAX_ATTACK_COOLTIME = 1.2f;
+    private static final float MAX_ATTACK_COOLTIME = 0.6f;
     private float attackCoolTime;
     protected float dx, dy;
     public Boss_Bomber_Wing(float x, float y, float dx, float dy, int resId) {
@@ -27,7 +28,7 @@ public class Boss_Bomber_Wing extends AnimObject implements BoxCollidable {
         this.dx = dx;
         this.dy = dy;
         this.attackCoolTime = MAX_ATTACK_COOLTIME;
-        this.hp = 40;
+        this.hp = 50;
         fab.reset();
     }
 
@@ -98,6 +99,7 @@ public class Boss_Bomber_Wing extends AnimObject implements BoxCollidable {
         hp -= damage;
         if(hp < 0) {
             remove();
+            SoundEffects.get().play(R.raw.long_bomb, 0.9f, 0.9f, 3, 0, 1);
             SecondScene.get().getGameWorld().add(SecondScene.Layer.enemy.ordinal(), Explosion.get(x, y, width, height));
             SecondScene.get().addScore(550);
         }

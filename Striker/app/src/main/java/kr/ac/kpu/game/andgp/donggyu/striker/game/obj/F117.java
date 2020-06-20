@@ -121,6 +121,10 @@ public class F117 extends AnimObject implements BoxCollidable {
         y = sh - UIBridge.x(100);;
     }
 
+    public void cheat() {
+        hp = MAX_HP;
+    }
+
     private enum State {
         idle, left, right, skill, boost
     }
@@ -216,7 +220,7 @@ public class F117 extends AnimObject implements BoxCollidable {
             if(state != State.skill) {
                 attackCoolTime -= seconds;
                 if (attackCoolTime < 0.f) {
-                    SoundEffects.get().play(R.raw.shoot, 0.2f, 0.2f, 1, 0, 1);
+                    SoundEffects.get().play(R.raw.shoot, 0.2f, 0.2f, 0, 0, 1);
                     SecondScene.get().getGameWorld().add(SecondScene.Layer.bullet.ordinal(), Bullet.get(x, y, 92, 164, BULLET_IMAGE[power], 0.f, -1000.f, true, power, 4));
                     attackCoolTime = ATTACK_COOL_TIME;
                 }

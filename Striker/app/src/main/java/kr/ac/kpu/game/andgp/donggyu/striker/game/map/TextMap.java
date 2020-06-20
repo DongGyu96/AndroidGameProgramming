@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 import kr.ac.kpu.game.andgp.donggyu.striker.R;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.main.GameObject;
+import kr.ac.kpu.game.andgp.donggyu.striker.framework.main.GameScene;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.main.GameTimer;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.main.GameWorld;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.main.UIBridge;
@@ -21,6 +22,7 @@ import kr.ac.kpu.game.andgp.donggyu.striker.game.obj.Helicopter;
 import kr.ac.kpu.game.andgp.donggyu.striker.game.obj.MediumPlane;
 import kr.ac.kpu.game.andgp.donggyu.striker.game.obj.SmallPlane;
 import kr.ac.kpu.game.andgp.donggyu.striker.game.obj.Warning;
+import kr.ac.kpu.game.andgp.donggyu.striker.game.scene.GameClearScene;
 import kr.ac.kpu.game.andgp.donggyu.striker.game.scene.SecondScene;
 
 public class TextMap {
@@ -112,14 +114,20 @@ public class TextMap {
                 obj = MediumPlane.get(y, -100, 0.f, 3 * blockSize * 0.75f);
                 break;
             case 'B':
-                layer = SecondScene.Layer.boss;
+                layer = SecondScene.Layer.ui;
                 obj = new Warning(UIBridge.metrics.center.x, UIBridge.metrics.center.y, UIBridge.x(300), UIBridge.y(200), 0);
                 setPause(true);
                 break;
             case 'P':
-                layer = SecondScene.Layer.boss;
+                layer = SecondScene.Layer.ui;
                 obj = new Warning(UIBridge.metrics.center.x, UIBridge.metrics.center.y, UIBridge.x(300), UIBridge.y(200), 1);
                 setPause(true);
+                break;
+            case 'E': // Game Clear
+                SecondScene.get().BGMStop();
+                int type = SecondScene.get().getPlayerType();
+                GameClearScene scene = new GameClearScene(type);
+                scene.push();
                 break;
         }
         if (obj != null) {

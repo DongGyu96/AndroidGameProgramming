@@ -51,6 +51,18 @@ public class SecondScene extends GameScene {
         SceneBGM.stop();
     }
 
+    public void CHEAT() {
+        if(playerType == 0) {
+            F117 f117 = (F117) player;
+            f117.cheat();
+
+        }
+        else {
+            F22 f22 = (F22) player;
+            f22.cheat();
+        }
+    }
+
     public enum Layer {
         bg, item, boss, enemy, enemy_bullet, bullet, player, ui, COUNT
     }
@@ -159,7 +171,7 @@ public class SecondScene extends GameScene {
             f117.setJoystick(joystick);
         }
         else {
-            player = new F22(cx, sh - mdpi_100, 700.0f, 700.0f);
+            player = new F22(cx, sh - mdpi_100, 600.0f, 600.0f);
             gameWorld.add(Layer.player.ordinal(), player);
             Joystick joystick = new Joystick(-500, -500, Joystick.Direction.normal, 100);
             gameWorld.add(Layer.ui.ordinal(), joystick);
@@ -189,6 +201,9 @@ public class SecondScene extends GameScene {
             F22 f22 = (F22)player;
             f22.restart();
         }
+        map.setPause(false);
         map.reset();
     }
+
+    public int getPlayerType() {return playerType;}
 }

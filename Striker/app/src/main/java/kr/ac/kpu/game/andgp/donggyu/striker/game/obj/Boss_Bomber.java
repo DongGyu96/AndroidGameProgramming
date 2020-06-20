@@ -22,10 +22,11 @@ import kr.ac.kpu.game.andgp.donggyu.striker.framework.util.CollisionHelper;
 import kr.ac.kpu.game.andgp.donggyu.striker.game.scene.SecondScene;
 
 public class Boss_Bomber extends AnimObject implements BoxCollidable {
-    private static final float MAX_ATTACK_COOLTIME = 1.2f;
+    private static final float MAX_ATTACK_COOLTIME = 0.75f;
     private static final float MAX_EXPLOSION_COOLTIME = 0.25f;
     private final FrameAnimationBitmap fabDead;
     private final Random random;
+    private boolean attack;
     private float explosionCoolTime;
     private State state;
     private float attackCoolTime;
@@ -38,7 +39,7 @@ public class Boss_Bomber extends AnimObject implements BoxCollidable {
         this.dx = dx;
         this.dy = dy;
         this.attackCoolTime = MAX_ATTACK_COOLTIME;
-        this.hp = 80;
+        this.hp = 200;
         fab.reset();
         this.fabDead = new FrameAnimationBitmap(R.mipmap.boss1_dead, 0, 1);
         this.state = State.Idle;
@@ -82,7 +83,7 @@ public class Boss_Bomber extends AnimObject implements BoxCollidable {
             height -= 40.f * seconds;
             explosionCoolTime -= seconds;
             if(explosionCoolTime < 0.f) {
-                SoundEffects.get().play(R.raw.long_bomb2, 0.7f, 0.7f, 1, 0, 1);
+                SoundEffects.get().play(R.raw.long_bomb2, 0.7f, 0.7f, 3, 0, 1);
                 SecondScene.get().getGameWorld().add(SecondScene.Layer.enemy.ordinal(),
                         Explosion.get(x + random.nextInt(200) - 100, y + random.nextInt(200) - 100, 100 + random.nextInt(50), 100 + random.nextInt(50)));
                 explosionCoolTime = MAX_EXPLOSION_COOLTIME;
@@ -106,21 +107,55 @@ public class Boss_Bomber extends AnimObject implements BoxCollidable {
         if(y > 0.f) {
             attackCoolTime -= seconds;
             if(attackCoolTime < 0.f) {
-                ArrayList<GameObject> player = SecondScene.get().getGameWorld().objectsAtLayer(SecondScene.Layer.player.ordinal());
                 float xDir, yDir;
-                for (GameObject obj : player) {
-                    xDir = obj.getX() - x;
-                    yDir = obj.getY() - y;
+                int dir = random.nextInt(3);
+                if(dir == 0) {
+                    for (int i = 0; i <= 10; ++i) {
+                        xDir = UIBridge.metrics.size.x / 5 * i;
+                        yDir = UIBridge.metrics.size.y;
 
-                    float temp = (xDir*xDir)+(yDir*yDir);
-                    temp = (float)Math.sqrt(temp);
+                        float temp = (xDir * xDir) + (yDir * yDir);
+                        temp = (float) Math.sqrt(temp);
 
-                    xDir = xDir / temp;
-                    yDir = yDir / temp;
+                        xDir = xDir / temp;
+                        yDir = yDir / temp;
 
-                    SecondScene.get().getGameWorld().add(SecondScene.Layer.enemy_bullet.ordinal(),
-                            Bullet.get(x, y, 30, 30, R.mipmap.enemy_bullet, xDir * 400.f, yDir * 400.f, false, 1, 1));
+                        SecondScene.get().getGameWorld().add(SecondScene.Layer.enemy_bullet.ordinal(),
+                                Bullet.get(x, y, 30, 30, R.mipmap.enemy_bullet, xDir * 400.f, yDir * 400.f, false, 1, 1));
+                    }
                 }
+                else if(dir == 1)
+                {
+                    for (int i = -10; i <= 0; ++i) {
+                        xDir = UIBridge.metrics.size.x / 5 * i;
+                        yDir = UIBridge.metrics.size.y;
+
+                        float temp = (xDir * xDir) + (yDir * yDir);
+                        temp = (float) Math.sqrt(temp);
+
+                        xDir = xDir / temp;
+                        yDir = yDir / temp;
+
+                        SecondScene.get().getGameWorld().add(SecondScene.Layer.enemy_bullet.ordinal(),
+                                Bullet.get(x, y, 30, 30, R.mipmap.enemy_bullet, xDir * 400.f, yDir * 400.f, false, 1, 1));
+                    }
+                }
+                else {
+                    for (int i = -5; i <= 5; ++i) {
+                        xDir = UIBridge.metrics.size.x / 5 * i;
+                        yDir = UIBridge.metrics.size.y;
+
+                        float temp = (xDir * xDir) + (yDir * yDir);
+                        temp = (float) Math.sqrt(temp);
+
+                        xDir = xDir / temp;
+                        yDir = yDir / temp;
+
+                        SecondScene.get().getGameWorld().add(SecondScene.Layer.enemy_bullet.ordinal(),
+                                Bullet.get(x, y, 30, 30, R.mipmap.enemy_bullet, xDir * 400.f, yDir * 400.f, false, 1, 1));
+                    }
+                }
+                SoundEffects.get().play(R.raw.attack2, 0.8f, 0.8f, 2, 0, 1);
                 attackCoolTime = MAX_ATTACK_COOLTIME;
             }
         }

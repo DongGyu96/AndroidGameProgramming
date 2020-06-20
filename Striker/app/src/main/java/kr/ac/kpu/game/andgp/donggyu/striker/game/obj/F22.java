@@ -114,10 +114,39 @@ public class F22 extends AnimObject implements BoxCollidable {
 
         if(state == State.skill)
         {
+            ArrayList<GameObject> bullets = SecondScene.get().getGameWorld().objectsAtLayer(SecondScene.Layer.enemy_bullet.ordinal());
+            if(fabSkill.getFrame() > 22 && fabSkill.getFrame() < 44) {
+                for (GameObject obj : bullets) {
+                    if (!(obj instanceof Bullet)) {
+                        continue;
+                    }
+                    Bullet bullet = (Bullet) obj;
+                    bullet.remove();
+                    SecondScene.get().getGameWorld().add(SecondScene.Layer.bullet.ordinal(), Explosion.get(bullet.getX(), bullet.getY(), 40, 40));
+                }
+            }
             if(47 / 2 == fabSkill.getFrame()) {
                 SecondScene.get().getGameWorld().add(SecondScene.Layer.bullet.ordinal(), Bomb.get(UIBridge.metrics.center.x, UIBridge.metrics.center.y, UIBridge.metrics.size.x, UIBridge.metrics.size.x, false));
                 ArrayList<GameObject> enemys = SecondScene.get().getGameWorld().objectsAtLayer(SecondScene.Layer.enemy.ordinal());
-                ArrayList<GameObject> bullets = SecondScene.get().getGameWorld().objectsAtLayer(SecondScene.Layer.enemy_bullet.ordinal());
+                ArrayList<GameObject> boss = SecondScene.get().getGameWorld().objectsAtLayer(SecondScene.Layer.boss.ordinal());
+                for(GameObject obj : boss) {
+                    if (obj instanceof Boss_UFO) {
+                        Boss_UFO enemy = (Boss_UFO) obj;
+                        enemy.Damage(10);
+                    }
+                    else if (obj instanceof Boss_UFO_Turret) {
+                        Boss_UFO_Turret enemy = (Boss_UFO_Turret) obj;
+                        enemy.Damage(10);
+                    }
+                    else if (obj instanceof Boss_Bomber) {
+                        Boss_Bomber enemy = (Boss_Bomber) obj;
+                        enemy.Damage(10);
+                    }
+                    else if (obj instanceof Boss_Bomber_Wing) {
+                        Boss_Bomber_Wing enemy = (Boss_Bomber_Wing) obj;
+                        enemy.Damage(10);
+                    }
+                }
                 for (GameObject obj : enemys) {
                     if (obj instanceof Helicopter) {
                         Helicopter enemy = (Helicopter) obj;
@@ -135,15 +164,7 @@ public class F22 extends AnimObject implements BoxCollidable {
                         continue;
                     }
                 }
-                for (GameObject obj : bullets) {
-                    if (!(obj instanceof Bullet)) {
-                        continue;
-                    }
-                    Bullet bullet = (Bullet) obj;
-                    bullet.remove();
-                    SoundEffects.get().play(R.raw.emp, 0.6f, 0.6f, 1, 0, 1.f);
-                    SecondScene.get().getGameWorld().add(SecondScene.Layer.bullet.ordinal(), Explosion.get(bullet.getX(), bullet.getY(), 40, 40));
-                }
+                SoundEffects.get().play(R.raw.emp, 0.8f, 0.8f, 3, 0, 1.f);
             }
             if(fabSkill.done())
                 state = State.idle;
@@ -189,7 +210,7 @@ public class F22 extends AnimObject implements BoxCollidable {
             if(state != State.skill) {
                 attackCoolTime -= seconds;
                 if (attackCoolTime < 0.f) {
-                    SoundEffects.get().play(R.raw.shoot2, 0.2f, 0.2f, 1, 0, 1);
+                    SoundEffects.get().play(R.raw.shoot2, 0.2f, 0.2f, 0, 0, 1);
                     SecondScene.get().getGameWorld().add(SecondScene.Layer.bullet.ordinal(), Bullet.get(x, y, 92, 164, BULLET_IMAGE[power], 0.f, -1000.f, true, power, 4));
                     attackCoolTime = ATTACK_COOL_TIME;
                 }
@@ -199,6 +220,10 @@ public class F22 extends AnimObject implements BoxCollidable {
                 }
             }
         }
+    }
+
+    public void cheat() {
+        hp = MAX_HP;
     }
 
     private void checkEnemyCollision() {

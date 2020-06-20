@@ -22,8 +22,9 @@ import kr.ac.kpu.game.andgp.donggyu.striker.framework.util.CollisionHelper;
 import kr.ac.kpu.game.andgp.donggyu.striker.game.scene.SecondScene;
 
 public class Boss_UFO extends AnimObject implements BoxCollidable {
-    private static final float MAX_ATTACK_COOLTIME = 1.2f;
+    private static final float MAX_ATTACK_COOLTIME = 1.f;
     private static final float MAX_EXPLOSION_COOLTIME = 0.25f;
+    private static final float MAX_ATTACK2_COOLTIME = 0.75f;
     private final FrameAnimationBitmap fabOpen;
     private final FrameAnimationBitmap fabFinal;
     private final FrameAnimationBitmap fabDead;
@@ -35,13 +36,15 @@ public class Boss_UFO extends AnimObject implements BoxCollidable {
     private Boss_UFO_Turret turret = null;
     private boolean turretDead;
     private boolean turretCreate = false;
+    private float attack2CoolTime;
 
     public Boss_UFO(float x, float y, float dx, float dy) {
         super(x, y, 143 * 4, 127 * 4, R.mipmap.boss2, 15, 8);
         this.dx = dx;
         this.dy = dy;
         this.attackCoolTime = MAX_ATTACK_COOLTIME;
-        this.hp = 50;
+        this.attack2CoolTime = MAX_ATTACK2_COOLTIME;
+        this.hp = 200;
         fab.reset();
         this.fabOpen = new FrameAnimationBitmap(R.mipmap.boss2_hatchopen, 10, 8);
         this.fabFinal = new FrameAnimationBitmap(R.mipmap.boss2_final, 15, 8);
@@ -81,7 +84,7 @@ public class Boss_UFO extends AnimObject implements BoxCollidable {
         if(state == State.Dead) {
             explosionCoolTime -= seconds;
             if(explosionCoolTime < 0.f) {
-                SoundEffects.get().play(R.raw.long_bomb, 0.7f, 0.7f, 1, 0, 1);
+                SoundEffects.get().play(R.raw.long_bomb, 0.7f, 0.7f, 3, 0, 1);
                 SecondScene.get().getGameWorld().add(SecondScene.Layer.enemy.ordinal(),
                         Explosion.get(x + random.nextInt(200) - 100, y + random.nextInt(200) - 100, 100 + random.nextInt(50), 100 + random.nextInt(50)));
                 explosionCoolTime = MAX_EXPLOSION_COOLTIME;
@@ -121,22 +124,47 @@ public class Boss_UFO extends AnimObject implements BoxCollidable {
 
             attackCoolTime -= seconds;
             if(attackCoolTime < 0.f) {
-                ArrayList<GameObject> player = SecondScene.get().getGameWorld().objectsAtLayer(SecondScene.Layer.player.ordinal());
-                float xDir, yDir;
-                for (GameObject obj : player) {
-                    xDir = obj.getX() - x;
-                    yDir = obj.getY() - y;
+                if(state == State.Final) {
+                    int angle = random.nextInt(30);
+                    for(int i = 0; i < 36; ++i) {
+                        float xPos = x + (float)Math.cos(Math.toRadians((i + 1) * 10) + angle) * 100.f;
+                        float yPos = y + (float)Math.sin(Math.toRadians((i + 1) * 10) + angle) * 100.f;
+                        float xDir = xPos - x;
+                        float yDir = yPos - y;
 
-                    float temp = (xDir*xDir)+(yDir*yDir);
-                    temp = (float)Math.sqrt(temp);
+                        float temp = (xDir * xDir) + (yDir * yDir);
+                        temp = (float) Math.sqrt(temp);
 
-                    xDir = xDir / temp;
-                    yDir = yDir / temp;
+                        xDir = xDir / temp;
+                        yDir = yDir / temp;
 
-                    SecondScene.get().getGameWorld().add(SecondScene.Layer.enemy_bullet.ordinal(),
-                            Bullet.get(x, y, 30, 30, R.mipmap.enemy_bullet, xDir * 400.f, yDir * 400.f, false, 1, 1));
+                        SecondScene.get().getGameWorld().add(SecondScene.Layer.enemy_bullet.ordinal(),
+                                Bullet.get(x, y + UIBridge.y(15), 30, 30, R.mipmap.enemy_bullet, xDir * 400.f, yDir * 400.f, false, 1, 1));
+                    }
                 }
+                SoundEffects.get().play(R.raw.attack, 0.8f, 0.8f, 2, 0, 1);
                 attackCoolTime = MAX_ATTACK_COOLTIME;
+            }
+            attack2CoolTime -= seconds;
+            if(attack2CoolTime < 0.f) {
+                if(state == State.Final) {
+                    ArrayList<GameObject> player = SecondScene.get().getGameWorld().objectsAtLayer(SecondScene.Layer.player.ordinal());
+                    for (GameObject obj : player) {
+                        float xDir = obj.getX() - x;
+                        float yDir = obj.getY() - y;
+
+                        float temp = (xDir * xDir) + (yDir * yDir);
+                        temp = (float) Math.sqrt(temp);
+
+                        xDir = xDir / temp;
+                        yDir = yDir / temp;
+
+                        SecondScene.get().getGameWorld().add(SecondScene.Layer.enemy_bullet.ordinal(),
+                                Bullet.get(x, y, 60, 60, R.mipmap.enemy_bullet, xDir * 500.f, yDir * 500.f, false, 1, 1));
+                    }
+                    SoundEffects.get().play(R.raw.attack, 0.8f, 0.8f, 2, 0, 1);
+                    attack2CoolTime = MAX_ATTACK_COOLTIME;
+                }
             }
         }
 

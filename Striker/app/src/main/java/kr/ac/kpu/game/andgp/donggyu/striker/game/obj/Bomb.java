@@ -54,6 +54,25 @@ public class Bomb extends AnimObject implements Recyclable, BoxCollidable {
 
     private void checkCollision() {
         ArrayList<GameObject> Enemys = SecondScene.get().getGameWorld().objectsAtLayer(SecondScene.Layer.enemy.ordinal());
+//        ArrayList<GameObject> boss = SecondScene.get().getGameWorld().objectsAtLayer(SecondScene.Layer.boss.ordinal()); 너무 강력함
+//        for(GameObject obj : boss) {
+//            if (obj instanceof Boss_UFO) {
+//                Boss_UFO enemy = (Boss_UFO) obj;
+//                enemy.Damage(1);
+//            }
+//            else if (obj instanceof Boss_UFO_Turret) {
+//                Boss_UFO_Turret enemy = (Boss_UFO_Turret) obj;
+//                enemy.Damage(1);
+//            }
+//            else if (obj instanceof Boss_Bomber) {
+//                Boss_Bomber enemy = (Boss_Bomber) obj;
+//                enemy.Damage(1);
+//            }
+//            else if (obj instanceof Boss_Bomber_Wing) {
+//                Boss_Bomber_Wing enemy = (Boss_Bomber_Wing) obj;
+//                enemy.Damage(1);
+//            }
+//        }
         for (GameObject obj : Enemys) {
             if (obj instanceof Helicopter) {
                 Helicopter enemy = (Helicopter) obj;
@@ -97,8 +116,8 @@ public class Bomb extends AnimObject implements Recyclable, BoxCollidable {
 
     @Override
     public void getBox(RectF rect) {
-        int width = UIBridge.x(fab.getWidth()) / 2;
-        int height = UIBridge.y(fab.getHeight()) / 2;
+        int width = UIBridge.x(fab.getWidth()) / 4 * 3;
+        int height = UIBridge.y(fab.getHeight()) / 4 * 3;
 
         int hw = width / 2;
         int hh = height / 2;
