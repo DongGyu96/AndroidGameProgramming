@@ -17,15 +17,18 @@ import kr.ac.kpu.game.andgp.donggyu.striker.framework.main.RecyclePool;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.main.UIBridge;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.obj.AnimObject;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.res.bitmap.FrameAnimationBitmap;
+import kr.ac.kpu.game.andgp.donggyu.striker.framework.res.sound.SoundEffects;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.util.CollisionHelper;
 import kr.ac.kpu.game.andgp.donggyu.striker.game.scene.SecondScene;
 
 public class Boss_UFO extends AnimObject implements BoxCollidable {
     private static final float MAX_ATTACK_COOLTIME = 1.2f;
+    private static final float MAX_EXPLOSION_COOLTIME = 0.25f;
     private final FrameAnimationBitmap fabOpen;
     private final FrameAnimationBitmap fabFinal;
     private final FrameAnimationBitmap fabDead;
     private final Random random;
+    private float explosionCoolTime;
     private State state;
     private float attackCoolTime;
     protected float dx, dy;
@@ -45,6 +48,7 @@ public class Boss_UFO extends AnimObject implements BoxCollidable {
         this.fabDead = new FrameAnimationBitmap(R.mipmap.boss2_dead, 10, 8);
         this.state = State.Idle;
         this.random = new Random();
+        this.explosionCoolTime = MAX_EXPLOSION_COOLTIME;
     }
 
     private enum State {
@@ -73,17 +77,27 @@ public class Boss_UFO extends AnimObject implements BoxCollidable {
 
     @Override
     public void update() {
+        float seconds = GameTimer.getTimeDiffSeconds();
         if(state == State.Dead) {
-            SecondScene.get().getGameWorld().add(SecondScene.Layer.enemy.ordinal(),
-                    Explosion.get(x + random.nextInt(200) - 100, y + random.nextInt(200) - 100, 100 + random.nextInt(50), 100 + random.nextInt(50)));
+            explosionCoolTime -= seconds;
+            if(explosionCoolTime < 0.f) {
+                SoundEffects.get().play(R.raw.long_bomb, 0.7f, 0.7f, 1, 0, 1);
+                SecondScene.get().getGameWorld().add(SecondScene.Layer.enemy.ordinal(),
+                        Explosion.get(x + random.nextInt(200) - 100, y + random.nextInt(200) - 100, 100 + random.nextInt(50), 100 + random.nextInt(50)));
+                explosionCoolTime = MAX_EXPLOSION_COOLTIME;
+            }
             if(fabDead.done()) {
-                remove();
-                SecondScene.get().addScore(1200);
-                SecondScene.get().pause(false);
+                y += dy * seconds * 1.5f;
+                width -= 40.f * seconds;
+                height -= 40.f * seconds;
+                if(y > UIBridge.metrics.size.y) {
+                    remove();
+                    SecondScene.get().addScore(1200);
+                    SecondScene.get().pause(false);
+                }
             }
             return;
         }
-        float seconds = GameTimer.getTimeDiffSeconds();
 
         if(y < UIBridge.y(200)) {
             x += dx * seconds;
@@ -181,13 +195,31 @@ public class Boss_UFO extends AnimObject implements BoxCollidable {
             fabFinal.draw(canvas, dstRect, null);
         }
         else if(state == State.Dead) {
-            float halfWidth = width / 2;
-            float halfHeight = height / 2;
-            dstRect.left = x - halfWidth;
-            dstRect.top = y - halfHeight;
-            dstRect.right = x + halfWidth;
-            dstRect.bottom = y + halfHeight;
-            fabDead.draw(canvas, dstRect, null);
+            if(fabDead.done()) {
+                float halfWidth = width / 2;
+                float halfHeight = height / 2;
+                dstRect.left = x - halfWidth;
+                dstRect.top = y - halfHeight;
+                dstRect.right = x + halfWidth;
+                dstRect.bottom = y + halfHeight;
+
+                Rect srcRect = new Rect();
+                srcRect.top = 0;
+                srcRect.bottom = 127;
+                srcRect.left = 143 * 7;
+                srcRect.right = srcRect.left + 143;
+
+                fabDead.draw(canvas, srcRect, dstRect, null);
+            }
+            else {
+                float halfWidth = width / 2;
+                float halfHeight = height / 2;
+                dstRect.left = x - halfWidth;
+                dstRect.top = y - halfHeight;
+                dstRect.right = x + halfWidth;
+                dstRect.bottom = y + halfHeight;
+                fabDead.draw(canvas, dstRect, null);
+            }
         }
     }
 }

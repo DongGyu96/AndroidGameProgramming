@@ -1,6 +1,7 @@
 package kr.ac.kpu.game.andgp.donggyu.striker.game.scene;
 
 import android.animation.ValueAnimator;
+import android.media.MediaPlayer;
 import android.view.animation.OvershootInterpolator;
 
 import java.util.ArrayList;
@@ -12,9 +13,11 @@ import kr.ac.kpu.game.andgp.donggyu.striker.framework.main.UIBridge;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.obj.BitmapObject;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.obj.ui.Button;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.obj.ui.TextButton;
+import kr.ac.kpu.game.andgp.donggyu.striker.framework.res.sound.SoundEffects;
 
 public class GameOverScene extends GameScene {
     private static final String TAG = GameOverScene.class.getSimpleName();
+    private MediaPlayer SceneBGM;
 
     public enum Layer {
         bg, enemy, player, ui, COUNT
@@ -29,6 +32,11 @@ public class GameOverScene extends GameScene {
     public void enter() {
         super.enter();
         setTransparent(true);
+
+        SceneBGM = MediaPlayer.create(SoundEffects.get().getContext(), R.raw.ingamebgm2);
+        SceneBGM.setLooping(true);
+        SceneBGM.start();
+
         initObjects();
 
         int mdpi_100 = UIBridge.y(100);
@@ -44,6 +52,21 @@ public class GameOverScene extends GameScene {
             }
         });
         anim.start();
+    }
+
+    @Override
+    public void exit() {
+//        GyroSensor.get().destroy();
+        super.exit();
+        SceneBGM.stop();
+    }
+
+    @Override
+    public void resume() {
+        super.resume();
+        SceneBGM = MediaPlayer.create(SoundEffects.get().getContext(), R.raw.ingamebgm2);
+        SceneBGM.setLooping(true);
+        SceneBGM.start();
     }
 
     private void scrollTo(float y) {
@@ -84,6 +107,7 @@ public class GameOverScene extends GameScene {
         button.setOnClickRunnable(new Runnable() {
             @Override
             public void run() {
+                SceneBGM.stop();
                 SecondScene.get().restart();
                 pop();
             }

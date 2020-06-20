@@ -2,6 +2,7 @@ package kr.ac.kpu.game.andgp.donggyu.striker.game.scene;
 
 
 import android.graphics.RectF;
+import android.media.MediaPlayer;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ import kr.ac.kpu.game.andgp.donggyu.striker.framework.obj.bg.ImageScrollBackgrou
 //import kr.ac.kpu.game.andgp.donggyu.striker.game.map.TextMap;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.obj.ui.Button;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.obj.ui.TextButton;
+import kr.ac.kpu.game.andgp.donggyu.striker.framework.res.sound.SoundEffects;
 import kr.ac.kpu.game.andgp.donggyu.striker.game.map.TextMap;
 import kr.ac.kpu.game.andgp.donggyu.striker.game.obj.CityBackground;
 import kr.ac.kpu.game.andgp.donggyu.striker.game.obj.F117;
@@ -38,10 +40,15 @@ public class SecondScene extends GameScene {
 
     private int playerType;
     private GameObject player;
+    private MediaPlayer SceneBGM;
 
     public SecondScene(int select) {
         super();
         playerType = select;
+    }
+
+    public void BGMStop() {
+        SceneBGM.stop();
     }
 
     public enum Layer {
@@ -71,7 +78,12 @@ public class SecondScene extends GameScene {
         super.enter();
         instance = this;
 //        GyroSensor.get();
+        SceneBGM = MediaPlayer.create(SoundEffects.get().getContext(), R.raw.ingamebgm);
+        SceneBGM.setLooping(true);
+        SceneBGM.start();
+
         initObjects();
+
         map = new TextMap("stage_01.txt", gameWorld);
     }
 
@@ -79,6 +91,15 @@ public class SecondScene extends GameScene {
     public void exit() {
 //        GyroSensor.get().destroy();
         super.exit();
+        SceneBGM.stop();
+    }
+
+    @Override
+    public void resume() {
+        super.resume();
+        SceneBGM = MediaPlayer.create(SoundEffects.get().getContext(), R.raw.ingamebgm);
+        SceneBGM.setLooping(true);
+        SceneBGM.start();
     }
 
     private void initObjects() {
@@ -102,6 +123,7 @@ public class SecondScene extends GameScene {
         btnSettings.setOnClickRunnable(new Runnable() {
             @Override
             public void run() {
+                SceneBGM.stop();
                 DialogScene scene = new DialogScene();
                 scene.push();
                 return;

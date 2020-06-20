@@ -5,6 +5,7 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import kr.ac.kpu.game.andgp.donggyu.striker.R;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.iface.BoxCollidable;
@@ -16,12 +17,17 @@ import kr.ac.kpu.game.andgp.donggyu.striker.framework.main.RecyclePool;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.main.UIBridge;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.obj.AnimObject;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.res.bitmap.FrameAnimationBitmap;
+import kr.ac.kpu.game.andgp.donggyu.striker.framework.res.sound.SoundEffects;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.util.CollisionHelper;
 import kr.ac.kpu.game.andgp.donggyu.striker.game.scene.SecondScene;
 
 public class Boss_Bomber extends AnimObject implements BoxCollidable {
     private static final float MAX_ATTACK_COOLTIME = 1.2f;
+    private static final float MAX_EXPLOSION_COOLTIME = 0.25f;
     private final FrameAnimationBitmap fabDead;
+    private final Random random;
+    private float explosionCoolTime;
+    private State state;
     private float attackCoolTime;
     protected float dx, dy;
     private Boss_Bomber_Wing leftWing;
@@ -34,9 +40,17 @@ public class Boss_Bomber extends AnimObject implements BoxCollidable {
         this.attackCoolTime = MAX_ATTACK_COOLTIME;
         this.hp = 80;
         fab.reset();
-        this.fabDead = new FrameAnimationBitmap(R.mipmap.boss1_dead, 10, 1);
+        this.fabDead = new FrameAnimationBitmap(R.mipmap.boss1_dead, 0, 1);
+        this.state = State.Idle;
+        this.random = new Random();
+        this.explosionCoolTime = MAX_EXPLOSION_COOLTIME;
         AddLeftRightWing();
     }
+
+    private enum State {
+        Idle, Dead, End
+    };
+
     private void AddLeftRightWing() {
         leftWing = new Boss_Bomber_Wing(x - UIBridge.x(110), y + UIBridge.y(30), dx, dy, R.mipmap.boss1_left);
         SecondScene.get().getGameWorld().add(SecondScene.Layer.enemy.ordinal(), leftWing);
@@ -61,6 +75,26 @@ public class Boss_Bomber extends AnimObject implements BoxCollidable {
     @Override
     public void update() {
         float seconds = GameTimer.getTimeDiffSeconds();
+
+        if(state == State.Dead) {
+            y += dy * seconds * 1.5f;
+            width -= 40.f * seconds;
+            height -= 40.f * seconds;
+            explosionCoolTime -= seconds;
+            if(explosionCoolTime < 0.f) {
+                SoundEffects.get().play(R.raw.long_bomb2, 0.7f, 0.7f, 1, 0, 1);
+                SecondScene.get().getGameWorld().add(SecondScene.Layer.enemy.ordinal(),
+                        Explosion.get(x + random.nextInt(200) - 100, y + random.nextInt(200) - 100, 100 + random.nextInt(50), 100 + random.nextInt(50)));
+                explosionCoolTime = MAX_EXPLOSION_COOLTIME;
+            }
+            if(y > UIBridge.metrics.size.y) {
+                remove();
+                SecondScene.get().getGameWorld().add(SecondScene.Layer.enemy.ordinal(), Explosion.get(x, y, width, height));
+                SecondScene.get().addScore(1200);
+                SecondScene.get().pause(false);
+            }
+            return;
+        }
 
         if(y < UIBridge.y(200)) {
             x += dx * seconds;
@@ -113,15 +147,23 @@ public class Boss_Bomber extends AnimObject implements BoxCollidable {
         if(hp < 0) {
             leftWing.Damage(9999);
             rightWing.Damage(9999);
-            remove();
-            SecondScene.get().getGameWorld().add(SecondScene.Layer.enemy.ordinal(), Explosion.get(x, y, width, height));
-            SecondScene.get().addScore(1200);
-            SecondScene.get().pause(false);
+            this.state = State.Dead;
         }
     }
 
     @Override
     public void draw(Canvas canvas) {
+        if(state == State.Dead) {
+            float halfWidth = width / 2;
+            float halfHeight = height / 2;
+            dstRect.left = x - halfWidth;
+            dstRect.top = y - halfHeight;
+            dstRect.right = x + halfWidth;
+            dstRect.bottom = y + halfHeight;
+
+            fabDead.draw(canvas, dstRect, null);
+            return;
+        }
         if (fab.done()) {
             float halfWidth = width / 2;
             float halfHeight = height / 2;

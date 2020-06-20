@@ -1,9 +1,6 @@
 package kr.ac.kpu.game.andgp.donggyu.striker.game.scene;
 
-import android.graphics.Bitmap;
-import android.graphics.Point;
-import android.graphics.RectF;
-import android.util.Log;
+import android.media.MediaPlayer;
 
 import java.util.Random;
 
@@ -12,15 +9,13 @@ import kr.ac.kpu.game.andgp.donggyu.striker.framework.main.GameScene;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.main.GameTimer;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.main.UIBridge;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.obj.BitmapObject;
-import kr.ac.kpu.game.andgp.donggyu.striker.framework.obj.ScoreObject;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.obj.ui.Button;
-import kr.ac.kpu.game.andgp.donggyu.striker.framework.obj.ui.TextButton;
-import kr.ac.kpu.game.andgp.donggyu.striker.game.obj.Ball;
+import kr.ac.kpu.game.andgp.donggyu.striker.framework.res.sound.SoundEffects;
 import kr.ac.kpu.game.andgp.donggyu.striker.game.obj.CityBackground;
-import kr.ac.kpu.game.andgp.donggyu.striker.ui.activity.MainActivity;
 
 public class FirstScene extends GameScene {
     private static final String TAG = FirstScene.class.getSimpleName();
+    private MediaPlayer SceneBGM;
 
     public enum Layer {
         bg, enemy, player, ui, COUNT
@@ -44,7 +39,25 @@ public class FirstScene extends GameScene {
     @Override
     public void enter() {
         super.enter();
+        //titleBGM = SoundEffects.get().play(R.raw.titlebgm, 0, 0, 1);
+        SceneBGM = MediaPlayer.create(SoundEffects.get().getContext(), R.raw.titlebgm);
+        SceneBGM.setLooping(true);
+        SceneBGM.start();
         initObjects();
+    }
+
+    @Override
+    public void exit() {
+        super.exit();
+        SceneBGM.stop();
+    }
+
+    @Override
+    public void resume() {
+        super.resume();
+        SceneBGM = MediaPlayer.create(SoundEffects.get().getContext(), R.raw.titlebgm);
+        SceneBGM.setLooping(true);
+        SceneBGM.start();
     }
 
     private void initObjects() {
@@ -70,6 +83,7 @@ public class FirstScene extends GameScene {
         button.setOnClickRunnable(new Runnable() {
             @Override
             public void run() {
+                SceneBGM.stop();
                 SelectScene scene = new SelectScene();
                 scene.push();
             }

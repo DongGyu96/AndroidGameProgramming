@@ -1,5 +1,7 @@
 package kr.ac.kpu.game.andgp.donggyu.striker.game.scene;
 
+import android.media.MediaPlayer;
+
 import java.util.Random;
 
 import kr.ac.kpu.game.andgp.donggyu.striker.R;
@@ -8,12 +10,15 @@ import kr.ac.kpu.game.andgp.donggyu.striker.framework.main.GameTimer;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.main.UIBridge;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.obj.BitmapObject;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.obj.ui.Button;
+import kr.ac.kpu.game.andgp.donggyu.striker.framework.res.sound.SoundEffects;
 import kr.ac.kpu.game.andgp.donggyu.striker.game.obj.CityBackground;
 import kr.ac.kpu.game.andgp.donggyu.striker.game.obj.SelectPlayer;
 
 public class SelectScene extends GameScene {
     private static final String TAG = SelectScene.class.getSimpleName();
     private SelectPlayer selectPlayer;
+
+    private MediaPlayer SceneBGM;
 
     public enum Layer {
         bg, enemy, player, ui, COUNT
@@ -33,7 +38,26 @@ public class SelectScene extends GameScene {
     @Override
     public void enter() {
         super.enter();
+
+        SceneBGM = MediaPlayer.create(SoundEffects.get().getContext(), R.raw.selectbgm);
+        SceneBGM.setLooping(true);
+        SceneBGM.start();
+
         initObjects();
+    }
+
+    @Override
+    public void exit() {
+        super.exit();
+        SceneBGM.stop();
+    }
+
+    @Override
+    public void resume() {
+        super.resume();
+        SceneBGM = MediaPlayer.create(SoundEffects.get().getContext(), R.raw.titlebgm);
+        SceneBGM.setLooping(true);
+        SceneBGM.start();
     }
 
     private void initObjects() {
@@ -51,6 +75,8 @@ public class SelectScene extends GameScene {
         button.setOnClickRunnable(new Runnable() {
             @Override
             public void run() {
+                SceneBGM.stop();
+                SoundEffects.get().play(R.raw.select, 1.f, 1.f, 1, 0, 1);
                 SecondScene scene = new SecondScene(selectPlayer.getSelect());
                 scene.push();
             }
@@ -61,6 +87,7 @@ public class SelectScene extends GameScene {
         leftButton.setOnClickRunnable(new Runnable() {
             @Override
             public void run() {
+                SoundEffects.get().play(R.raw.select, 0.6f, 0.6f, 1, 0, 1);
                 selectPlayer.select(0);
             }
         });
@@ -70,6 +97,7 @@ public class SelectScene extends GameScene {
         rightButton.setOnClickRunnable(new Runnable() {
             @Override
             public void run() {
+                SoundEffects.get().play(R.raw.select, 0.6f, 0.6f, 1, 0, 1);
                 selectPlayer.select(1);
             }
         });

@@ -9,6 +9,7 @@ import android.widget.Toast;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.input.sensor.GyroSensor;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.main.GameScene;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.main.UIBridge;
+import kr.ac.kpu.game.andgp.donggyu.striker.framework.res.sound.SoundEffects;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.view.GameView;
 import kr.ac.kpu.game.andgp.donggyu.striker.game.scene.FirstScene;
 
@@ -22,7 +23,10 @@ public class GameActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(new GameView(this));
 
+
         new FirstScene().run();
+
+
 
     }
 

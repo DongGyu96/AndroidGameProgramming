@@ -14,6 +14,7 @@ import kr.ac.kpu.game.andgp.donggyu.striker.framework.main.GameTimer;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.main.UIBridge;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.obj.AnimObject;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.res.bitmap.FrameAnimationBitmap;
+import kr.ac.kpu.game.andgp.donggyu.striker.framework.res.sound.SoundEffects;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.util.CollisionHelper;
 import kr.ac.kpu.game.andgp.donggyu.striker.game.scene.GameOverScene;
 import kr.ac.kpu.game.andgp.donggyu.striker.game.scene.SecondScene;
@@ -140,6 +141,7 @@ public class F22 extends AnimObject implements BoxCollidable {
                     }
                     Bullet bullet = (Bullet) obj;
                     bullet.remove();
+                    SoundEffects.get().play(R.raw.emp, 0.6f, 0.6f, 1, 0, 1.f);
                     SecondScene.get().getGameWorld().add(SecondScene.Layer.bullet.ordinal(), Explosion.get(bullet.getX(), bullet.getY(), 40, 40));
                 }
             }
@@ -187,6 +189,7 @@ public class F22 extends AnimObject implements BoxCollidable {
             if(state != State.skill) {
                 attackCoolTime -= seconds;
                 if (attackCoolTime < 0.f) {
+                    SoundEffects.get().play(R.raw.shoot2, 0.2f, 0.2f, 1, 0, 1);
                     SecondScene.get().getGameWorld().add(SecondScene.Layer.bullet.ordinal(), Bullet.get(x, y, 92, 164, BULLET_IMAGE[power], 0.f, -1000.f, true, power, 4));
                     attackCoolTime = ATTACK_COOL_TIME;
                 }
@@ -247,6 +250,7 @@ public class F22 extends AnimObject implements BoxCollidable {
             if (invincible) {
                 return;
             }
+            SoundEffects.get().play(R.raw.select, 0.85f, 0.85f, 1, 0, 1);
             invincible = true;
             invincibleTime = INVINCIBLE_TIME;
             invincibleCount = 0;
@@ -254,6 +258,7 @@ public class F22 extends AnimObject implements BoxCollidable {
         }
         else {
             // GameOver
+            SecondScene.get().BGMStop();
             GameOverScene scene = new GameOverScene();
             scene.push();
             return;

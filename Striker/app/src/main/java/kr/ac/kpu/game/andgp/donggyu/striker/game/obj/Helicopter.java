@@ -13,6 +13,7 @@ import kr.ac.kpu.game.andgp.donggyu.striker.framework.main.RecyclePool;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.main.UIBridge;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.obj.AnimObject;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.iface.Recyclable;
+import kr.ac.kpu.game.andgp.donggyu.striker.framework.res.sound.SoundEffects;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.util.CollisionHelper;
 import kr.ac.kpu.game.andgp.donggyu.striker.game.scene.SecondScene;
 
@@ -119,6 +120,7 @@ public class Helicopter extends AnimObject implements Recyclable, BoxCollidable 
         hp -= damage;
         if(hp < 0) {
             remove();
+            SoundEffects.get().play(R.raw.bomb2, 0.8f, 0.8f, 1, 0, 1);
             SecondScene.get().getGameWorld().add(SecondScene.Layer.enemy.ordinal(), Explosion.get(x, y, width, height));
             SecondScene.get().addScore(150);
         }

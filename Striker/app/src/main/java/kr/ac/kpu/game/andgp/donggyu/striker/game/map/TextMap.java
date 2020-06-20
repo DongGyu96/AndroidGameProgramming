@@ -14,11 +14,13 @@ import kr.ac.kpu.game.andgp.donggyu.striker.framework.main.GameWorld;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.main.UIBridge;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.obj.AnimObject;
 import kr.ac.kpu.game.andgp.donggyu.striker.framework.obj.BitmapObject;
+import kr.ac.kpu.game.andgp.donggyu.striker.framework.res.sound.SoundEffects;
 import kr.ac.kpu.game.andgp.donggyu.striker.game.obj.Boss_Bomber;
 import kr.ac.kpu.game.andgp.donggyu.striker.game.obj.Boss_UFO;
 import kr.ac.kpu.game.andgp.donggyu.striker.game.obj.Helicopter;
 import kr.ac.kpu.game.andgp.donggyu.striker.game.obj.MediumPlane;
 import kr.ac.kpu.game.andgp.donggyu.striker.game.obj.SmallPlane;
+import kr.ac.kpu.game.andgp.donggyu.striker.game.obj.Warning;
 import kr.ac.kpu.game.andgp.donggyu.striker.game.scene.SecondScene;
 
 public class TextMap {
@@ -111,12 +113,12 @@ public class TextMap {
                 break;
             case 'B':
                 layer = SecondScene.Layer.boss;
-                obj = new Boss_Bomber(UIBridge.metrics.size.x / 2, -100, 0.f, 3 * blockSize * 0.75f);
+                obj = new Warning(UIBridge.metrics.center.x, UIBridge.metrics.center.y, UIBridge.x(300), UIBridge.y(200), 0);
                 setPause(true);
                 break;
             case 'P':
                 layer = SecondScene.Layer.boss;
-                obj = new Boss_UFO(UIBridge.metrics.size.x / 2, -100, 0.f, 3 * blockSize * 0.75f);
+                obj = new Warning(UIBridge.metrics.center.x, UIBridge.metrics.center.y, UIBridge.x(300), UIBridge.y(200), 1);
                 setPause(true);
                 break;
         }
