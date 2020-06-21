@@ -25,7 +25,7 @@ public class F22 extends AnimObject implements BoxCollidable {
     private static final float ATTACK_COOL_TIME = 0.1f;
     private static final float INVINCIBLE_TIME = 3.f;
     private static final int MAX_SKILL_COUNT = 7;
-    private static final int MAX_HP = 0;
+    private static final int MAX_HP = 5;
     private final FrameAnimationBitmap fabSkill;
     private final FrameAnimationBitmap fabSkillIcon;
     private final FrameAnimationBitmap fabHpIcon;
